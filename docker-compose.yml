@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: modotrabajo_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/modotrabajo
+      - NEXTAUTH_SECRET=changeme_in_production
+      - NEXTAUTH_URL=http://localhost:3000
+    depends_on:
+      - db
+    networks:
+      - modotrabajo_net
+
+  db:
+    container_name: modotrabajo_db
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=modotrabajo
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - modotrabajo_net
+
+volumes:
+  postgres_data:
+
+
+networks:
+  modotrabajo_net:
+    driver: bridge
