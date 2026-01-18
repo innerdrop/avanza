@@ -91,7 +91,14 @@ export default function AdminEmpresasPage() {
                                     onClick={() => handleViewDetails(company.id)}
                                     className={`p-4 rounded-xl border cursor-pointer transition-all ${selectedCompany?.id === company.id ? 'bg-blue-50 border-blue-500 shadow-md' : 'bg-white border-gray-100 hover:border-blue-300'}`}
                                 >
-                                    <h3 className="font-bold text-gray-900">{company.name}</h3>
+                                    <div className="flex items-center gap-2">
+                                        <h3 className="font-bold text-gray-900">{company.name}</h3>
+                                        {company.plan === 'premium' && (
+                                            <span className="px-2 py-0.5 bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-900 text-[10px] font-bold rounded-full shadow-sm">
+                                                👑 Premium
+                                            </span>
+                                        )}
+                                    </div>
                                     <p className="text-sm text-gray-500">{company.email}</p>
                                     <div className="mt-2 flex justify-between items-center">
                                         <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">
@@ -183,11 +190,7 @@ export default function AdminEmpresasPage() {
                                                     <p className="font-bold text-blue-600 text-lg">{selectedCompany.jobPostings.length}</p>
                                                 </div>
                                             </div>
-                                            <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-100">
-                                                <p className="text-xs text-yellow-700">
-                                                    💡 <strong>Consejo Admin:</strong> Puedes editar el nombre o email de la empresa directamente desde la base de datos si es necesario, o usar el botón de eliminar si la cuenta no es válida.
-                                                </p>
-                                            </div>
+
                                         </div>
                                     )}
                                 </div>

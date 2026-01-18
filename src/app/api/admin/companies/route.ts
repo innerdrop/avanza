@@ -17,6 +17,7 @@ export async function GET() {
                 id: true,
                 name: true,
                 email: true,
+                plan: true,
                 createdAt: true,
                 _count: {
                     select: { jobPostings: true }

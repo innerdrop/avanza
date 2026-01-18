@@ -36,6 +36,17 @@ export default function DashboardEmpresaPage() {
     const [showPremiumModal, setShowPremiumModal] = useState(false);
     const [pendingSubscription, setPendingSubscription] = useState<any | null>(null);
 
+    // Hire Modal States
+    const [showHireModal, setShowHireModal] = useState(false);
+    const [hireEmailData, setHireEmailData] = useState<{
+        candidateName: string;
+        candidateEmail: string;
+        jobTitle: string;
+        subject: string;
+        message: string;
+    } | null>(null);
+    const [sendingEmail, setSendingEmail] = useState(false);
+
     useEffect(() => {
         fetchData();
     }, [router]);
@@ -257,6 +268,39 @@ export default function DashboardEmpresaPage() {
             case "interviewed": return "Entrevistado";
             case "hired": return "Contratado";
             default: return status;
+        }
+    };
+
+    const handleSendHireEmail = async () => {
+        if (!hireEmailData) return;
+
+        setSendingEmail(true);
+        try {
+            const response = await fetch('/api/company/send-hire-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    candidateEmail: hireEmailData.candidateEmail,
+                    candidateName: hireEmailData.candidateName,
+                    subject: hireEmailData.subject,
+                    message: hireEmailData.message
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('✅ Email enviado correctamente al candidato');
+                setShowHireModal(false);
+                setHireEmailData(null);
+            } else {
+                alert(`❌ Error al enviar email: ${data.error || 'Error desconocido'}`);
+            }
+        } catch (error) {
+            console.error('Error sending email:', error);
+            alert('❌ Error de conexión al enviar el email');
+        } finally {
+            setSendingEmail(false);
         }
     };
 
@@ -847,6 +891,22 @@ export default function DashboardEmpresaPage() {
 
                             {/* Actions */}
                             <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-slate-200">
+                                <button
+                                    onClick={() => {
+                                        const jobTitle = selectedApplication.jobPosting?.title || 'el puesto';
+                                        setHireEmailData({
+                                            candidateName: selectedApplication.nombre,
+                                            candidateEmail: selectedApplication.email,
+                                            jobTitle: jobTitle,
+                                            subject: `Entrevista para "${jobTitle}" en ${companyName}`,
+                                            message: `Estimado/a ${selectedApplication.nombre},\n\nGracias por participar en nuestro proceso de selección. Nos complace informarle que la empresa ${companyName} está interesada en avanzar con su candidatura para el puesto de ${jobTitle}.\n\nNos gustaría coordinar una entrevista para conocerlo/a mejor y discutir los detalles de la posición. Por favor, indíquenos su disponibilidad para los próximos días.\n\nQuedamos a la espera de su respuesta.\n\nSaludos cordiales,\n${companyName}`
+                                        });
+                                        setShowHireModal(true);
+                                    }}
+                                    className="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-semibold rounded-xl shadow-md flex items-center justify-center gap-2 transition-all"
+                                >
+                                    ✉️ Entrevistar
+                                </button>
                                 {selectedApplication.cvUrl && (
                                     <a
                                         href={selectedApplication.cvUrl}
@@ -1082,6 +1142,109 @@ export default function DashboardEmpresaPage() {
                             >
                                 Contactar candidato
                             </a>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Hire Email Modal */}
+            {showHireModal && hireEmailData && (
+                <div
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) setShowHireModal(false);
+                    }}
+                >
+                    <div className="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200">
+                        {/* Modal Header */}
+                        <div className="bg-gradient-to-r from-emerald-600 to-green-600 p-6 text-white">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h2 className="text-xl font-bold mb-1 flex items-center gap-2">
+                                        ✉️ Contactar para Entrevista
+                                    </h2>
+                                    <p className="text-emerald-100 text-sm">Envía una propuesta de entrevista al candidato</p>
+                                </div>
+                                <button
+                                    onClick={() => setShowHireModal(false)}
+                                    className="p-2 hover:bg-white/20 rounded-full transition-colors"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="p-6 space-y-5">
+                            {/* Recipient */}
+                            <div>
+                                <label className="text-sm font-semibold text-slate-700 mb-2 block">📧 Para:</label>
+                                <input
+                                    type="email"
+                                    value={hireEmailData.candidateEmail}
+                                    onChange={(e) => setHireEmailData({ ...hireEmailData, candidateEmail: e.target.value })}
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 font-medium"
+                                />
+                            </div>
+
+                            {/* Subject */}
+                            <div>
+                                <label className="text-sm font-semibold text-slate-700 mb-2 block">📝 Asunto:</label>
+                                <input
+                                    type="text"
+                                    value={hireEmailData.subject}
+                                    onChange={(e) => setHireEmailData({ ...hireEmailData, subject: e.target.value })}
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 font-medium"
+                                />
+                            </div>
+
+                            {/* Message */}
+                            <div>
+                                <label className="text-sm font-semibold text-slate-700 mb-2 block">💬 Mensaje:</label>
+                                <textarea
+                                    value={hireEmailData.message}
+                                    onChange={(e) => setHireEmailData({ ...hireEmailData, message: e.target.value })}
+                                    rows={12}
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 font-normal resize-none"
+                                    style={{ whiteSpace: 'pre-wrap' }}
+                                />
+                            </div>
+
+                            {/* Info Note */}
+                            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                                <p className="text-sm text-emerald-700">
+                                    📧 <strong>Información:</strong> Este email será enviado directamente desde la plataforma usando el correo avanzafueguinoi@gmail.com. El candidato recibirá tu mensaje en su bandeja de entrada.
+                                </p>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
+                                <button
+                                    onClick={() => setShowHireModal(false)}
+                                    className="px-6 py-3 border border-slate-300 text-slate-700 font-medium rounded-xl hover:bg-slate-50 transition-colors"
+                                    disabled={sendingEmail}
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    onClick={handleSendHireEmail}
+                                    disabled={sendingEmail}
+                                    className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-semibold rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {sendingEmail ? (
+                                        <>
+                                            <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                            Enviando...
+                                        </>
+                                    ) : (
+                                        <>
+                                            📤 Enviar Email
+                                        </>
+                                    )}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
