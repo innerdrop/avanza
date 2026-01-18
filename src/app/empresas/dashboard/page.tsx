@@ -235,27 +235,27 @@ export default function DashboardEmpresaPage() {
     const getJobStatusBadge = (status: string) => {
         switch (status) {
             case 'pending':
-                return <span className="px-2.5 py-1 text-xs rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-medium">⏳ Pendiente</span>;
+                return <span className="px-2.5 py-1 text-xs rounded-full bg-[#FEF3C7] text-[#92400E] border border-[#FACC15] font-medium">⏳ Pendiente</span>;
             case 'active':
-                return <span className="px-2.5 py-1 text-xs rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium">✓ Aprobado</span>;
+                return <span className="px-2.5 py-1 text-xs rounded-full bg-[#DCFCE7] text-[#166534] border border-[#22C55E] font-medium">✓ Aprobado</span>;
             case 'rejected':
-                return <span className="px-2.5 py-1 text-xs rounded-full bg-red-50 text-red-600 border border-red-200 font-medium">✕ Rechazado</span>;
+                return <span className="px-2.5 py-1 text-xs rounded-full bg-[#FEE2E2] text-[#DC2626] border border-[#EF4444] font-medium">✕ Rechazado</span>;
             case 'closed':
-                return <span className="px-2.5 py-1 text-xs rounded-full bg-slate-100 text-slate-600 border border-slate-200 font-medium">Cerrado</span>;
+                return <span className="px-2.5 py-1 text-xs rounded-full bg-[#F5F7FA] text-[#1F2937] border border-gray-300 font-medium">Cerrado</span>;
             default:
-                return <span className="px-2.5 py-1 text-xs rounded-full bg-slate-100 text-slate-600 border border-slate-200 font-medium">{status}</span>;
+                return <span className="px-2.5 py-1 text-xs rounded-full bg-[#F5F7FA] text-[#1F2937] border border-gray-300 font-medium">{status}</span>;
         }
     };
 
     const getAppStatusColor = (status: string) => {
         switch (status) {
-            case "pending": return "bg-amber-50 text-amber-700 border-amber-300";
-            case "reviewed": return "bg-blue-50 text-blue-700 border-blue-300";
-            case "rejected": return "bg-red-50 text-red-600 border-red-300";
-            case "accepted": return "bg-emerald-50 text-emerald-700 border-emerald-300";
-            case "interviewed": return "bg-violet-50 text-violet-700 border-violet-300";
-            case "hired": return "bg-teal-50 text-teal-700 border-teal-300";
-            default: return "bg-slate-100 text-slate-600 border-slate-300";
+            case "pending": return "bg-[#FEF3C7] text-[#92400E] border-[#FACC15]";
+            case "reviewed": return "bg-[#DBEAFE] text-[#1E40AF] border-[#0A66C2]";
+            case "rejected": return "bg-[#FEE2E2] text-[#DC2626] border-[#EF4444]";
+            case "accepted": return "bg-[#DCFCE7] text-[#166534] border-[#22C55E]";
+            case "interviewed": return "bg-[#DBEAFE] text-[#1F4ED8] border-[#1F4ED8]";
+            case "hired": return "bg-[#DCFCE7] text-[#166534] border-[#22C55E]";
+            default: return "bg-[#F5F7FA] text-[#1F2937] border-gray-300";
         }
     };
 
@@ -319,26 +319,26 @@ export default function DashboardEmpresaPage() {
     const totalPendingApps = applications.filter(a => a.status === 'pending').length;
 
     return (
-        <div className="min-h-screen bg-slate-100">
+        <div className="min-h-screen bg-[#F5F7FA]">
             {/* Header */}
-            <header className="bg-gradient-to-r from-slate-800 to-slate-900 text-white sticky top-0 z-40 shadow-lg">
+            <header className="bg-white text-[#1F2937] sticky top-0 z-40 shadow-sm border-b border-gray-200">
                 <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-bold text-lg shadow-md">
+                        <div className="w-10 h-10 rounded-xl bg-[#0A66C2] flex items-center justify-center font-bold text-lg text-white">
                             🏢
                         </div>
                         <div>
-                            <h1 className="text-lg font-bold">Panel de Empresa</h1>
-                            <p className="text-xs text-slate-400">Gestiona tus empleos y postulaciones</p>
+                            <h1 className="text-lg font-bold text-[#1F2937]">Panel de Empresa</h1>
+                            <p className="text-xs text-gray-500">Gestiona tus empleos y postulaciones</p>
                         </div>
                     </div>
 
                     {/* Company Name - Center */}
-                    <div className="hidden md:flex items-center gap-2 bg-slate-700/50 px-4 py-2 rounded-xl">
-                        <span className="text-slate-400 text-sm">Empresa:</span>
-                        <span className="font-bold text-white">{companyName}</span>
+                    <div className="hidden md:flex items-center gap-2 bg-[#F5F7FA] px-4 py-2 rounded-xl border border-gray-200">
+                        <span className="text-gray-500 text-sm">Empresa:</span>
+                        <span className="font-bold text-[#1F2937]">{companyName}</span>
                         {companyPlan === 'premium' && (
-                            <span className="ml-2 px-2 py-0.5 bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-900 text-xs font-bold rounded-full shadow-sm">
+                            <span className="ml-2 px-2 py-0.5 bg-[#FB923C] text-white text-xs font-bold rounded-full">
                                 👑 Premium
                             </span>
                         )}
@@ -346,7 +346,7 @@ export default function DashboardEmpresaPage() {
 
                     <button
                         onClick={handleLogout}
-                        className="px-4 py-2 text-sm text-slate-300 hover:text-white border border-slate-600 rounded-lg hover:bg-slate-700 transition-all"
+                        className="px-4 py-2 text-sm text-gray-600 hover:text-[#1F2937] border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
                     >
                         Cerrar Sesión
                     </button>
@@ -356,21 +356,21 @@ export default function DashboardEmpresaPage() {
             <main className="max-w-7xl mx-auto px-4 py-6">
                 {/* Stats Cards */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
-                        <p className="text-xs text-slate-500 uppercase font-medium mb-1">Total Empleos</p>
-                        <p className="text-2xl font-bold text-slate-800">{jobs.length}</p>
+                    <div className="bg-white rounded-xl border border-gray-200 p-4">
+                        <p className="text-xs text-gray-500 uppercase font-medium mb-1">Total Empleos</p>
+                        <p className="text-2xl font-bold text-[#1F2937]">{jobs.length}</p>
                     </div>
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
-                        <p className="text-xs text-slate-500 uppercase font-medium mb-1">Activos</p>
-                        <p className="text-2xl font-bold text-emerald-600">{jobs.filter(j => j.status === 'active').length}</p>
+                    <div className="bg-white rounded-xl border border-gray-200 p-4">
+                        <p className="text-xs text-gray-500 uppercase font-medium mb-1">Activos</p>
+                        <p className="text-2xl font-bold text-[#22C55E]">{jobs.filter(j => j.status === 'active').length}</p>
                     </div>
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
-                        <p className="text-xs text-slate-500 uppercase font-medium mb-1">Postulaciones</p>
-                        <p className="text-2xl font-bold text-blue-600">{applications.length}</p>
+                    <div className="bg-white rounded-xl border border-gray-200 p-4">
+                        <p className="text-xs text-gray-500 uppercase font-medium mb-1">Postulaciones</p>
+                        <p className="text-2xl font-bold text-[#0A66C2]">{applications.length}</p>
                     </div>
-                    <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
-                        <p className="text-xs text-slate-500 uppercase font-medium mb-1">Pendientes</p>
-                        <p className="text-2xl font-bold text-amber-600">{totalPendingApps}</p>
+                    <div className="bg-white rounded-xl border border-gray-200 p-4">
+                        <p className="text-xs text-gray-500 uppercase font-medium mb-1">Pendientes</p>
+                        <p className="text-2xl font-bold text-[#FB923C]">{totalPendingApps}</p>
                     </div>
                 </div>
 
@@ -409,34 +409,34 @@ export default function DashboardEmpresaPage() {
                 )}
 
                 {/* Tab Navigation */}
-                <div className="bg-white rounded-xl border border-slate-200 p-1.5 mb-6 shadow-sm inline-flex">
+                <div className="bg-white rounded-xl border border-gray-200 p-1.5 mb-6 inline-flex">
                     <button
                         onClick={() => setActiveTab('empleos')}
                         className={`px-5 py-2.5 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${activeTab === 'empleos'
-                            ? 'bg-slate-800 text-white shadow-md'
-                            : 'text-slate-600 hover:bg-slate-100'
+                            ? 'bg-[#0A66C2] text-white'
+                            : 'text-gray-600 hover:bg-[#F5F7FA]'
                             }`}
                     >
                         📋 Mis Empleos
-                        <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === 'empleos' ? 'bg-slate-600' : 'bg-slate-200 text-slate-600'}`}>{jobs.length}</span>
+                        <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === 'empleos' ? 'bg-[#1F4ED8]' : 'bg-gray-200 text-gray-600'}`}>{jobs.length}</span>
                     </button>
                     <button
                         onClick={() => setActiveTab('postulaciones')}
                         className={`px-5 py-2.5 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${activeTab === 'postulaciones'
-                            ? 'bg-slate-800 text-white shadow-md'
-                            : 'text-slate-600 hover:bg-slate-100'
+                            ? 'bg-[#0A66C2] text-white'
+                            : 'text-gray-600 hover:bg-[#F5F7FA]'
                             }`}
                     >
                         👥 Postulaciones
                         {totalPendingApps > 0 && (
-                            <span className="px-2 py-0.5 rounded-full text-xs bg-red-500 text-white animate-pulse">{totalPendingApps}</span>
+                            <span className="px-2 py-0.5 rounded-full text-xs bg-[#EF4444] text-white">{totalPendingApps}</span>
                         )}
                     </button>
                 </div>
 
                 {loading ? (
                     <div className="flex justify-center py-20">
-                        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-slate-800"></div>
+                        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0A66C2]"></div>
                     </div>
                 ) : (
                     <>
@@ -445,12 +445,12 @@ export default function DashboardEmpresaPage() {
                             <div>
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                                     <div>
-                                        <h2 className="text-xl font-bold text-slate-800">Mis Publicaciones</h2>
-                                        <p className="text-slate-500 text-sm mt-1">Gestiona tus ofertas de empleo</p>
+                                        <h2 className="text-xl font-bold text-[#1F2937]">Mis Publicaciones</h2>
+                                        <p className="text-gray-500 text-sm mt-1">Gestiona tus ofertas de empleo</p>
                                     </div>
                                     <Link
                                         href="/empresas/nuevo-anuncio"
-                                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-[1.02]"
+                                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0A66C2] text-white font-semibold rounded-xl hover:bg-[#1F4ED8] transition-all"
                                     >
                                         <span className="text-lg">+</span>
                                         Publicar Empleo
@@ -458,46 +458,46 @@ export default function DashboardEmpresaPage() {
                                 </div>
 
                                 {jobs.length === 0 ? (
-                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-12 text-center">
+                                    <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
                                         <div className="text-5xl mb-4 opacity-50">📋</div>
-                                        <h3 className="text-xl font-semibold text-slate-700 mb-2">No tienes publicaciones</h3>
-                                        <p className="text-slate-500 mb-6">Crea tu primera oferta de empleo para empezar a recibir candidatos.</p>
+                                        <h3 className="text-xl font-semibold text-[#1F2937] mb-2">No tienes publicaciones</h3>
+                                        <p className="text-gray-500 mb-6">Crea tu primera oferta de empleo para empezar a recibir candidatos.</p>
                                         <Link
                                             href="/empresas/nuevo-anuncio"
-                                            className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors"
+                                            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0A66C2] text-white font-medium rounded-xl hover:bg-[#1F4ED8] transition-colors"
                                         >
                                             Crear mi primer anuncio
                                         </Link>
                                     </div>
                                 ) : (
-                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                                    <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
                                         <table className="w-full">
                                             <thead>
-                                                <tr className="border-b border-slate-200 bg-slate-50">
-                                                    <th className="text-left py-4 px-5 font-semibold text-xs text-slate-500 uppercase tracking-wider">Puesto</th>
-                                                    <th className="text-left py-4 px-5 font-semibold text-xs text-slate-500 uppercase tracking-wider hidden sm:table-cell">Ubicación</th>
-                                                    <th className="text-left py-4 px-5 font-semibold text-xs text-slate-500 uppercase tracking-wider">Estado</th>
-                                                    <th className="text-center py-4 px-5 font-semibold text-xs text-slate-500 uppercase tracking-wider hidden md:table-cell">Postulaciones</th>
-                                                    <th className="text-left py-4 px-5 font-semibold text-xs text-slate-500 uppercase tracking-wider hidden lg:table-cell">Fecha</th>
-                                                    <th className="text-right py-4 px-5 font-semibold text-xs text-slate-500 uppercase tracking-wider">Acciones</th>
+                                                <tr className="border-b border-gray-200 bg-[#F5F7FA]">
+                                                    <th className="text-left py-4 px-5 font-semibold text-xs text-gray-500 uppercase tracking-wider">Puesto</th>
+                                                    <th className="text-left py-4 px-5 font-semibold text-xs text-gray-500 uppercase tracking-wider hidden sm:table-cell">Ubicación</th>
+                                                    <th className="text-left py-4 px-5 font-semibold text-xs text-gray-500 uppercase tracking-wider">Estado</th>
+                                                    <th className="text-center py-4 px-5 font-semibold text-xs text-gray-500 uppercase tracking-wider hidden md:table-cell">Postulaciones</th>
+                                                    <th className="text-left py-4 px-5 font-semibold text-xs text-gray-500 uppercase tracking-wider hidden lg:table-cell">Fecha</th>
+                                                    <th className="text-right py-4 px-5 font-semibold text-xs text-gray-500 uppercase tracking-wider">Acciones</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-slate-100">
+                                            <tbody className="divide-y divide-gray-100">
                                                 {jobs.map((job) => (
-                                                    <tr key={job.id} className="hover:bg-slate-50 transition-colors">
+                                                    <tr key={job.id} className="hover:bg-[#F5F7FA] transition-colors">
                                                         <td className="py-4 px-5">
                                                             <div className="flex items-center gap-2">
-                                                                <p className="font-semibold text-slate-800">{job.title}</p>
+                                                                <p className="font-semibold text-[#1F2937]">{job.title}</p>
                                                                 {job.isFeatured && (
-                                                                    <span className="text-amber-500 text-sm" title="Destacado">★</span>
+                                                                    <span className="text-[#FACC15] text-sm" title="Destacado">★</span>
                                                                 )}
                                                                 {hasPendingPayment(job) && (
-                                                                    <span className="px-2 py-0.5 text-[10px] rounded-full bg-orange-100 text-orange-700 border border-orange-200 font-bold animate-pulse">💳 Pago Pendiente</span>
+                                                                    <span className="px-2 py-0.5 text-[10px] rounded-full bg-[#FEF3C7] text-[#92400E] border border-[#FB923C] font-bold">💳 Pago Pendiente</span>
                                                                 )}
                                                             </div>
-                                                            <p className="text-sm text-slate-500 sm:hidden">{job.location}</p>
+                                                            <p className="text-sm text-gray-500 sm:hidden">{job.location}</p>
                                                         </td>
-                                                        <td className="py-4 px-5 text-slate-600 hidden sm:table-cell">{job.location}</td>
+                                                        <td className="py-4 px-5 text-gray-600 hidden sm:table-cell">{job.location}</td>
                                                         <td className="py-4 px-5">{getJobStatusBadge(job.status)}</td>
                                                         <td className="py-4 px-5 text-center hidden md:table-cell">
                                                             <button
@@ -505,12 +505,12 @@ export default function DashboardEmpresaPage() {
                                                                     setFiltroEmpleo(job.id.toString());
                                                                     setActiveTab('postulaciones');
                                                                 }}
-                                                                className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-lg bg-blue-50 text-blue-700 font-semibold text-sm hover:bg-blue-100 border border-blue-200 transition-colors"
+                                                                className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-lg bg-[#DBEAFE] text-[#0A66C2] font-semibold text-sm hover:bg-[#BFDBFE] border border-[#0A66C2]/30 transition-colors"
                                                             >
                                                                 {job._count?.applications || 0}
                                                             </button>
                                                         </td>
-                                                        <td className="py-4 px-5 text-slate-500 text-sm hidden lg:table-cell">
+                                                        <td className="py-4 px-5 text-gray-500 text-sm hidden lg:table-cell">
                                                             {new Date(job.createdAt).toLocaleDateString('es-AR')}
                                                         </td>
                                                         <td className="py-4 px-5">
@@ -521,7 +521,7 @@ export default function DashboardEmpresaPage() {
                                                                             setSelectedJobForPayment(job);
                                                                             setShowPaymentModal(true);
                                                                         }}
-                                                                        className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors border border-transparent hover:border-orange-200 animate-pulse"
+                                                                        className="p-2 text-[#FB923C] hover:bg-[#FEF3C7] rounded-lg transition-colors border border-transparent hover:border-[#FB923C]"
                                                                         title="Ver datos de pago"
                                                                     >
                                                                         💳
@@ -530,8 +530,8 @@ export default function DashboardEmpresaPage() {
                                                                 <button
                                                                     onClick={() => handleAiMatch(job.id)}
                                                                     className={`p-2 rounded-lg transition-colors border ${matchingJob === job.id
-                                                                        ? "bg-purple-100 text-purple-700 border-purple-200 cursor-wait"
-                                                                        : "text-purple-600 hover:bg-purple-50 border-transparent hover:border-purple-200"
+                                                                        ? "bg-[#DBEAFE] text-[#1F4ED8] border-[#1F4ED8] cursor-wait"
+                                                                        : "text-[#1F4ED8] hover:bg-[#DBEAFE] border-transparent hover:border-[#1F4ED8]"
                                                                         }`}
                                                                     title="Encontrar talento ideal con IA"
                                                                     disabled={matchingJob !== null}
@@ -545,14 +545,14 @@ export default function DashboardEmpresaPage() {
                                                                 </button>
                                                                 <Link
                                                                     href={`/empresas/dashboard/editar/${job.id}`}
-                                                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-200"
+                                                                    className="p-2 text-[#0A66C2] hover:bg-[#DBEAFE] rounded-lg transition-colors border border-transparent hover:border-[#0A66C2]"
                                                                     title="Editar"
                                                                 >
                                                                     ✏️
                                                                 </Link>
                                                                 <button
                                                                     onClick={() => handleDeleteJob(job.id)}
-                                                                    className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-200"
+                                                                    className="p-2 text-[#EF4444] hover:bg-[#FEE2E2] rounded-lg transition-colors border border-transparent hover:border-[#EF4444]"
                                                                     title="Eliminar"
                                                                 >
                                                                     🗑️
@@ -567,11 +567,11 @@ export default function DashboardEmpresaPage() {
                                 )}
 
                                 {/* Info Card */}
-                                <div className="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-5">
-                                    <h4 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
+                                <div className="mt-6 bg-[#DBEAFE] border border-[#0A66C2]/20 rounded-xl p-5">
+                                    <h4 className="font-semibold text-[#1F4ED8] mb-2 flex items-center gap-2">
                                         <span>💡</span> ¿Cómo funciona?
                                     </h4>
-                                    <ul className="text-sm text-blue-700 space-y-1.5">
+                                    <ul className="text-sm text-[#1F4ED8] space-y-1.5">
                                         <li>• Tus anuncios son revisados por nuestro equipo antes de publicarse.</li>
                                         <li>• Una vez aprobados, aparecerán en la sección de empleos de la plataforma.</li>
                                         <li>• Los anuncios <strong>Destacados</strong> aparecen primero en los resultados.</li>
@@ -585,16 +585,16 @@ export default function DashboardEmpresaPage() {
                         {activeTab === 'postulaciones' && (
                             <div>
                                 <div className="mb-6">
-                                    <h2 className="text-xl font-bold text-slate-800">Postulaciones Recibidas</h2>
-                                    <p className="text-slate-500 text-sm mt-1">Gestiona los candidatos que se postularon a tus empleos</p>
+                                    <h2 className="text-xl font-bold text-[#1F2937]">Postulaciones Recibidas</h2>
+                                    <p className="text-gray-500 text-sm mt-1">Gestiona los candidatos que se postularon a tus empleos</p>
                                 </div>
 
                                 {/* Filters */}
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                                    <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
-                                        <label className="text-xs text-slate-500 uppercase font-semibold mb-2 block">Filtrar por Empleo</label>
+                                    <div className="bg-white rounded-xl border border-gray-200 p-4">
+                                        <label className="text-xs text-gray-500 uppercase font-semibold mb-2 block">Filtrar por Empleo</label>
                                         <select
-                                            className="w-full bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 p-2 font-medium"
+                                            className="w-full bg-[#F5F7FA] border border-gray-200 rounded-lg text-[#1F2937] focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] p-2 font-medium"
                                             value={filtroEmpleo}
                                             onChange={(e) => setFiltroEmpleo(e.target.value)}
                                         >
@@ -604,10 +604,10 @@ export default function DashboardEmpresaPage() {
                                             ))}
                                         </select>
                                     </div>
-                                    <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
-                                        <label className="text-xs text-slate-500 uppercase font-semibold mb-2 block">Estado</label>
+                                    <div className="bg-white rounded-xl border border-gray-200 p-4">
+                                        <label className="text-xs text-gray-500 uppercase font-semibold mb-2 block">Estado</label>
                                         <select
-                                            className="w-full bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 p-2 font-medium"
+                                            className="w-full bg-[#F5F7FA] border border-gray-200 rounded-lg text-[#1F2937] focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] p-2 font-medium"
                                             value={filtroEstado}
                                             onChange={(e) => setFiltroEstado(e.target.value)}
                                         >
@@ -622,17 +622,17 @@ export default function DashboardEmpresaPage() {
                                 </div>
 
                                 {applications.length === 0 ? (
-                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-12 text-center">
+                                    <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
                                         <div className="text-5xl mb-4 opacity-50">👥</div>
-                                        <h3 className="text-xl font-semibold text-slate-700 mb-2">No hay postulaciones</h3>
-                                        <p className="text-slate-500">Aún no has recibido postulaciones para tus empleos.</p>
+                                        <h3 className="text-xl font-semibold text-[#1F2937] mb-2">No hay postulaciones</h3>
+                                        <p className="text-gray-500">Aún no has recibido postulaciones para tus empleos.</p>
                                     </div>
                                 ) : (
-                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                                    <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
                                         <div className="overflow-x-auto">
                                             <table className="w-full">
-                                                <thead className="border-b border-slate-200 bg-slate-50">
-                                                    <tr className="text-left text-xs text-slate-500 uppercase">
+                                                <thead className="border-b border-gray-200 bg-[#F5F7FA]">
+                                                    <tr className="text-left text-xs text-gray-500 uppercase">
                                                         <th className="py-4 px-4 font-semibold">Candidato</th>
                                                         <th className="py-4 px-4 font-semibold">Empleo</th>
                                                         <th className="py-4 px-4 font-semibold hidden md:table-cell">Área</th>
@@ -641,29 +641,29 @@ export default function DashboardEmpresaPage() {
                                                         <th className="py-4 px-4 font-semibold">Acciones</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody className="divide-y divide-slate-100">
+                                                <tbody className="divide-y divide-gray-100">
                                                     {filteredApplications.map((app) => (
-                                                        <tr key={app.id} className="hover:bg-slate-50 transition-colors">
+                                                        <tr key={app.id} className="hover:bg-[#F5F7FA] transition-colors">
                                                             <td className="py-4 px-4">
                                                                 <div className="flex items-center gap-3">
-                                                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold shadow-md">
+                                                                    <div className="w-10 h-10 rounded-full bg-[#0A66C2] text-white flex items-center justify-center font-bold">
                                                                         {app.nombre.charAt(0).toUpperCase()}
                                                                     </div>
                                                                     <div>
-                                                                        <p className="font-semibold text-slate-800">{app.nombre}</p>
-                                                                        <p className="text-xs text-slate-500">{app.email}</p>
-                                                                        <p className="text-xs text-slate-400">{app.telefono}</p>
+                                                                        <p className="font-semibold text-[#1F2937]">{app.nombre}</p>
+                                                                        <p className="text-xs text-gray-500">{app.email}</p>
+                                                                        <p className="text-xs text-gray-400">{app.telefono}</p>
                                                                     </div>
                                                                 </div>
                                                             </td>
                                                             <td className="py-4 px-4">
-                                                                <p className="text-sm font-medium text-slate-700">{app.jobPosting?.title || 'Sin empleo'}</p>
-                                                                <p className="text-xs text-slate-400">
+                                                                <p className="text-sm font-medium text-[#1F2937]">{app.jobPosting?.title || 'Sin empleo'}</p>
+                                                                <p className="text-xs text-gray-400">
                                                                     {new Date(app.createdAt).toLocaleDateString('es-AR')}
                                                                 </p>
                                                             </td>
-                                                            <td className="py-4 px-4 text-sm capitalize text-slate-600 hidden md:table-cell">{app.area}</td>
-                                                            <td className="py-4 px-4 text-sm text-slate-600 hidden lg:table-cell">{app.experiencia}</td>
+                                                            <td className="py-4 px-4 text-sm capitalize text-gray-600 hidden md:table-cell">{app.area}</td>
+                                                            <td className="py-4 px-4 text-sm text-gray-600 hidden lg:table-cell">{app.experiencia}</td>
                                                             <td className="py-4 px-4">
                                                                 <select
                                                                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold border cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-1 ${getAppStatusColor(app.status)}`}
@@ -681,7 +681,7 @@ export default function DashboardEmpresaPage() {
                                                                 <div className="flex flex-col sm:flex-row gap-1.5">
                                                                     <button
                                                                         onClick={() => setSelectedApplication(app)}
-                                                                        className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition-colors whitespace-nowrap"
+                                                                        className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#DBEAFE] text-[#0A66C2] border border-[#0A66C2]/30 hover:bg-[#BFDBFE] transition-colors whitespace-nowrap"
                                                                     >
                                                                         Ver Detalle
                                                                     </button>
@@ -690,14 +690,14 @@ export default function DashboardEmpresaPage() {
                                                                             href={app.cvUrl}
                                                                             target="_blank"
                                                                             download
-                                                                            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 transition-colors text-center whitespace-nowrap"
+                                                                            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#F5F7FA] text-[#1F2937] border border-gray-200 hover:bg-gray-100 transition-colors text-center whitespace-nowrap"
                                                                         >
                                                                             📄 CV
                                                                         </a>
                                                                     )}
                                                                     <button
                                                                         onClick={() => handleDeleteApplication(app.id)}
-                                                                        className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-50 text-red-500 border border-red-200 hover:bg-red-100 transition-colors whitespace-nowrap"
+                                                                        className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#FEE2E2] text-[#EF4444] border border-[#EF4444]/30 hover:bg-[#FECACA] transition-colors whitespace-nowrap"
                                                                     >
                                                                         🗑️
                                                                     </button>
@@ -719,18 +719,18 @@ export default function DashboardEmpresaPage() {
             {/* Application Detail Modal */}
             {selectedApplication && (
                 <div
-                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                    className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
                     onClick={(e) => {
                         if (e.target === e.currentTarget) setSelectedApplication(null);
                     }}
                 >
-                    <div className="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200">
+                    <div className="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto border border-gray-200">
                         {/* Modal Header */}
-                        <div className="p-6 border-b border-slate-200 flex justify-between items-center sticky top-0 bg-white z-10">
-                            <h2 className="text-xl font-bold text-slate-800">Detalle del Candidato</h2>
+                        <div className="p-6 border-b border-gray-200 flex justify-between items-center sticky top-0 bg-white z-10">
+                            <h2 className="text-xl font-bold text-[#1F2937]">Detalle del Candidato</h2>
                             <button
                                 onClick={() => setSelectedApplication(null)}
-                                className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500 hover:text-slate-700"
+                                className="p-2 hover:bg-[#F5F7FA] rounded-full transition-colors text-gray-500 hover:text-[#1F2937]"
                             >
                                 ✕
                             </button>
@@ -740,12 +740,12 @@ export default function DashboardEmpresaPage() {
                             {/* Header Info */}
                             <div className="flex items-start justify-between">
                                 <div className="flex items-center gap-4">
-                                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold text-xl shadow-lg">
+                                    <div className="w-14 h-14 rounded-full bg-[#0A66C2] text-white flex items-center justify-center font-bold text-xl">
                                         {selectedApplication.nombre.charAt(0).toUpperCase()}
                                     </div>
                                     <div>
-                                        <h3 className="text-2xl font-bold text-slate-800">{selectedApplication.nombre}</h3>
-                                        <p className="text-slate-500">{selectedApplication.jobPosting?.title}</p>
+                                        <h3 className="text-2xl font-bold text-[#1F2937]">{selectedApplication.nombre}</h3>
+                                        <p className="text-gray-500">{selectedApplication.jobPosting?.title}</p>
                                     </div>
                                 </div>
                                 <span className={`px-4 py-2 rounded-lg text-sm font-bold border ${getAppStatusColor(selectedApplication.status)}`}>
@@ -754,42 +754,42 @@ export default function DashboardEmpresaPage() {
                             </div>
 
                             {/* Contact Info */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 border border-slate-200 p-5 rounded-xl">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-[#F5F7FA] border border-gray-200 p-5 rounded-xl">
                                 <div>
-                                    <label className="text-xs text-slate-500 uppercase font-bold mb-1 block">📧 Email</label>
-                                    <p className="font-medium text-slate-800">{selectedApplication.email}</p>
+                                    <label className="text-xs text-gray-500 uppercase font-bold mb-1 block">📧 Email</label>
+                                    <p className="font-medium text-[#1F2937]">{selectedApplication.email}</p>
                                 </div>
                                 <div>
-                                    <label className="text-xs text-slate-500 uppercase font-bold mb-1 block">📱 Teléfono</label>
-                                    <p className="font-medium text-slate-800">{selectedApplication.telefono}</p>
+                                    <label className="text-xs text-gray-500 uppercase font-bold mb-1 block">📱 Teléfono</label>
+                                    <p className="font-medium text-[#1F2937]">{selectedApplication.telefono}</p>
                                 </div>
                                 <div>
-                                    <label className="text-xs text-slate-500 uppercase font-bold mb-1 block">💼 LinkedIn</label>
+                                    <label className="text-xs text-gray-500 uppercase font-bold mb-1 block">💼 LinkedIn</label>
                                     {selectedApplication.linkedin ? (
-                                        <a href={selectedApplication.linkedin} target="_blank" className="text-blue-600 hover:underline font-medium">Ver Perfil →</a>
+                                        <a href={selectedApplication.linkedin} target="_blank" className="text-[#0A66C2] hover:underline font-medium">Ver Perfil →</a>
                                     ) : (
-                                        <span className="text-slate-400">No proporcionado</span>
+                                        <span className="text-gray-400">No proporcionado</span>
                                     )}
                                 </div>
                                 <div>
-                                    <label className="text-xs text-slate-500 uppercase font-bold mb-1 block">📅 Fecha de Postulación</label>
-                                    <p className="font-medium text-slate-800">{new Date(selectedApplication.createdAt).toLocaleDateString('es-AR')}</p>
+                                    <label className="text-xs text-gray-500 uppercase font-bold mb-1 block">📅 Fecha de Postulación</label>
+                                    <p className="font-medium text-[#1F2937]">{new Date(selectedApplication.createdAt).toLocaleDateString('es-AR')}</p>
                                 </div>
                             </div>
 
                             {/* Profile Info */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
-                                    <label className="text-xs text-slate-500 uppercase block mb-1 font-bold">🏷️ Área</label>
-                                    <p className="font-medium capitalize text-slate-800">{selectedApplication.area}</p>
+                                <div className="bg-[#F5F7FA] border border-gray-200 rounded-xl p-4">
+                                    <label className="text-xs text-gray-500 uppercase block mb-1 font-bold">🏷️ Área</label>
+                                    <p className="font-medium capitalize text-[#1F2937]">{selectedApplication.area}</p>
                                 </div>
-                                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
-                                    <label className="text-xs text-slate-500 uppercase block mb-1 font-bold">📊 Experiencia</label>
-                                    <p className="font-medium text-slate-800">{selectedApplication.experiencia}</p>
+                                <div className="bg-[#F5F7FA] border border-gray-200 rounded-xl p-4">
+                                    <label className="text-xs text-gray-500 uppercase block mb-1 font-bold">📊 Experiencia</label>
+                                    <p className="font-medium text-[#1F2937]">{selectedApplication.experiencia}</p>
                                 </div>
-                                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
-                                    <label className="text-xs text-slate-500 uppercase block mb-1 font-bold">⏰ Disponibilidad</label>
-                                    <p className="font-medium text-slate-800">{selectedApplication.disponibilidad}</p>
+                                <div className="bg-[#F5F7FA] border border-gray-200 rounded-xl p-4">
+                                    <label className="text-xs text-gray-500 uppercase block mb-1 font-bold">⏰ Disponibilidad</label>
+                                    <p className="font-medium text-[#1F2937]">{selectedApplication.disponibilidad}</p>
                                 </div>
                             </div>
 
@@ -890,7 +890,7 @@ export default function DashboardEmpresaPage() {
                             </div>
 
                             {/* Actions */}
-                            <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-slate-200">
+                            <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-200">
                                 <button
                                     onClick={() => {
                                         const jobTitle = selectedApplication.jobPosting?.title || 'el puesto';
@@ -903,7 +903,7 @@ export default function DashboardEmpresaPage() {
                                         });
                                         setShowHireModal(true);
                                     }}
-                                    className="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-semibold rounded-xl shadow-md flex items-center justify-center gap-2 transition-all"
+                                    className="px-6 py-2.5 bg-[#22C55E] hover:bg-[#16A34A] text-white font-semibold rounded-xl flex items-center justify-center gap-2 transition-all"
                                 >
                                     ✉️ Entrevistar
                                 </button>
@@ -912,14 +912,14 @@ export default function DashboardEmpresaPage() {
                                         href={selectedApplication.cvUrl}
                                         target="_blank"
                                         download
-                                        className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md flex items-center justify-center gap-2 transition-colors"
+                                        className="px-6 py-2.5 bg-[#0A66C2] hover:bg-[#1F4ED8] text-white font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors"
                                     >
                                         📄 Descargar CV
                                     </a>
                                 )}
                                 <button
                                     onClick={() => setSelectedApplication(null)}
-                                    className="px-6 py-2.5 border border-slate-300 text-slate-700 font-medium rounded-xl hover:bg-slate-50 transition-colors"
+                                    className="px-6 py-2.5 border border-gray-300 text-[#1F2937] font-medium rounded-xl hover:bg-[#F5F7FA] transition-colors"
                                 >
                                     Cerrar
                                 </button>
@@ -1150,20 +1150,20 @@ export default function DashboardEmpresaPage() {
             {/* Hire Email Modal */}
             {showHireModal && hireEmailData && (
                 <div
-                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                    className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
                     onClick={(e) => {
                         if (e.target === e.currentTarget) setShowHireModal(false);
                     }}
                 >
-                    <div className="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200">
+                    <div className="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto border border-gray-200">
                         {/* Modal Header */}
-                        <div className="bg-gradient-to-r from-emerald-600 to-green-600 p-6 text-white">
+                        <div className="bg-[#22C55E] p-6 text-white">
                             <div className="flex justify-between items-start">
                                 <div>
                                     <h2 className="text-xl font-bold mb-1 flex items-center gap-2">
                                         ✉️ Contactar para Entrevista
                                     </h2>
-                                    <p className="text-emerald-100 text-sm">Envía una propuesta de entrevista al candidato</p>
+                                    <p className="text-white/80 text-sm">Envía una propuesta de entrevista al candidato</p>
                                 </div>
                                 <button
                                     onClick={() => setShowHireModal(false)}
@@ -1177,41 +1177,41 @@ export default function DashboardEmpresaPage() {
                         <div className="p-6 space-y-5">
                             {/* Recipient */}
                             <div>
-                                <label className="text-sm font-semibold text-slate-700 mb-2 block">📧 Para:</label>
+                                <label className="text-sm font-semibold text-[#1F2937] mb-2 block">📧 Para:</label>
                                 <input
                                     type="email"
                                     value={hireEmailData.candidateEmail}
                                     onChange={(e) => setHireEmailData({ ...hireEmailData, candidateEmail: e.target.value })}
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 font-medium"
+                                    className="w-full px-4 py-3 bg-[#F5F7FA] border border-gray-200 rounded-xl text-[#1F2937] focus:ring-2 focus:ring-[#22C55E] focus:border-[#22C55E] font-medium"
                                 />
                             </div>
 
                             {/* Subject */}
                             <div>
-                                <label className="text-sm font-semibold text-slate-700 mb-2 block">📝 Asunto:</label>
+                                <label className="text-sm font-semibold text-[#1F2937] mb-2 block">📝 Asunto:</label>
                                 <input
                                     type="text"
                                     value={hireEmailData.subject}
                                     onChange={(e) => setHireEmailData({ ...hireEmailData, subject: e.target.value })}
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 font-medium"
+                                    className="w-full px-4 py-3 bg-[#F5F7FA] border border-gray-200 rounded-xl text-[#1F2937] focus:ring-2 focus:ring-[#22C55E] focus:border-[#22C55E] font-medium"
                                 />
                             </div>
 
                             {/* Message */}
                             <div>
-                                <label className="text-sm font-semibold text-slate-700 mb-2 block">💬 Mensaje:</label>
+                                <label className="text-sm font-semibold text-[#1F2937] mb-2 block">💬 Mensaje:</label>
                                 <textarea
                                     value={hireEmailData.message}
                                     onChange={(e) => setHireEmailData({ ...hireEmailData, message: e.target.value })}
                                     rows={12}
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 font-normal resize-none"
+                                    className="w-full px-4 py-3 bg-[#F5F7FA] border border-gray-200 rounded-xl text-[#1F2937] focus:ring-2 focus:ring-[#22C55E] focus:border-[#22C55E] font-normal resize-none"
                                     style={{ whiteSpace: 'pre-wrap' }}
                                 />
                             </div>
 
                             {/* Info Note */}
-                            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-                                <p className="text-sm text-emerald-700">
+                            <div className="bg-[#DBEAFE] border border-[#0A66C2]/20 rounded-xl p-4">
+                                <p className="text-sm text-[#1F4ED8]">
                                     📧 <strong>Información:</strong> Este email será enviado directamente desde la plataforma usando el correo avanzafueguinoi@gmail.com. El candidato recibirá tu mensaje en su bandeja de entrada.
                                 </p>
                             </div>
@@ -1220,7 +1220,7 @@ export default function DashboardEmpresaPage() {
                             <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
                                 <button
                                     onClick={() => setShowHireModal(false)}
-                                    className="px-6 py-3 border border-slate-300 text-slate-700 font-medium rounded-xl hover:bg-slate-50 transition-colors"
+                                    className="px-6 py-3 border border-gray-300 text-[#1F2937] font-medium rounded-xl hover:bg-[#F5F7FA] transition-colors"
                                     disabled={sendingEmail}
                                 >
                                     Cancelar
@@ -1228,7 +1228,7 @@ export default function DashboardEmpresaPage() {
                                 <button
                                     onClick={handleSendHireEmail}
                                     disabled={sendingEmail}
-                                    className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-semibold rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="px-6 py-3 bg-[#22C55E] hover:bg-[#16A34A] text-white font-semibold rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {sendingEmail ? (
                                         <>
