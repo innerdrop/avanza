@@ -3,67 +3,56 @@
 @tailwind utilities;
 
 :root {
-  /* Moovy Jobs Color Palette - Light Mode */
-  --bg-main: #F1F5F9;
-  /* Slate-100 Base */
+  /* ===== MOOVY JOBS Color Palette ===== */
 
+  /* Background - Light theme like MOOVY Store */
+  --bg-main: #FFFFFF;
+  --bg-secondary: #F8FAFC;
   --bg-card: #FFFFFF;
-  /* Card White */
   --bg-card-hover: #F8FAFC;
-  /* Slate-50 Hover */
 
-  --primary: #3B82F6;
-  /* Blue-500 - Main Brand Blue */
-  --primary-dark: #1E40AF;
-  /* Blue-800 */
-  --primary-glow: rgba(59, 130, 246, 0.25);
+  /* Primary - MOOVY Jobs Blue */
+  --primary: #2563EB;
+  --primary-light: #3B82F6;
+  --primary-dark: #1D4ED8;
+  --primary-glow: rgba(37, 99, 235, 0.15);
 
+  /* MOOVY Brand Red (for shared elements) */
+  --moovy-red: #e60012;
+
+  /* Secondary - Dark slate for text/navbars */
   --secondary: #1E293B;
-  /* Slate-800 - Dark Gray */
   --secondary-light: #334155;
-  /* Slate-700 */
 
-  --accent: #06B6D4;
-  /* Cyan-500 */
-  --accent-glow: rgba(6, 182, 212, 0.3);
+  /* Accent - Teal (consistent with MOOVY ecosystem) */
+  --accent: #00D4AA;
+  --accent-glow: rgba(0, 212, 170, 0.2);
 
+  /* Status Colors */
   --success: #10B981;
-  /* Emerald-500 */
-  --success-glow: rgba(16, 185, 129, 0.3);
+  --success-glow: rgba(16, 185, 129, 0.2);
+  --warning: #F59E0B;
+  --error: #EF4444;
 
-  --text-primary: #0F172A;
-  /* Slate-900 */
-  --text-secondary: #64748B;
-  /* Slate-500 */
+  /* Text */
+  --text-primary: #18181B;
+  --text-secondary: #71717A;
+  --text-muted: #A1A1AA;
 
-  --border-light: #E2E8F0;
-  /* Slate-200 */
-  --border-active: #3B82F6;
+  /* Borders */
+  --border-light: #E4E4E7;
+  --border-active: #2563EB;
 
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  /* Typography */
+  --font-sans: 'Poppins', system-ui, -apple-system, sans-serif;
+  --font-brand: 'Junegull', sans-serif;
 
-  --header-height: 80px;
+  /* Layout */
+  --header-height: 72px;
 
-  /* Gradient for special elements */
-  --gradient-brand: linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%);
+  /* Gradients */
+  --gradient-brand: linear-gradient(135deg, #2563EB 0%, #00D4AA 100%);
   --gradient-dark: linear-gradient(135deg, #1E293B 0%, #334155 100%);
-}
-
-.dark {
-  --bg-main: #0F172A;
-  /* Slate-900 */
-  --bg-card: #1E293B;
-  /* Slate-800 */
-  --bg-card-hover: #334155;
-  /* Slate-700 */
-  --text-primary: #F8FAFC;
-  /* Slate-50 */
-  --text-secondary: #94A3B8;
-  /* Slate-400 */
-  --border-light: #334155;
-  /* Slate-700 */
-  --primary-glow: rgba(59, 130, 246, 0.35);
-  --accent-glow: rgba(34, 211, 238, 0.35);
 }
 
 * {
@@ -79,9 +68,9 @@ body {
   overflow-x: hidden;
 }
 
-/* Utilities */
+/* ===== UTILITIES ===== */
 .container {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 1rem;
 }
@@ -92,7 +81,7 @@ body {
   }
 }
 
-/* Modern Card with subtle border */
+/* ===== CARDS ===== */
 .bento-card {
   background: var(--bg-card);
   border: 1px solid var(--border-light);
@@ -101,17 +90,17 @@ body {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
 }
 
 .bento-card:hover {
   background: var(--bg-card-hover);
   border-color: var(--primary);
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px -12px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 20px 40px -12px var(--primary-glow);
 }
 
-/* Buttons */
+/* ===== BUTTONS ===== */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -122,6 +111,7 @@ body {
   transition: all 0.3s ease;
   cursor: pointer;
   border: none;
+  font-family: var(--font-sans);
 }
 
 .btn-primary {
@@ -138,7 +128,7 @@ body {
 
 .btn-glass {
   background: rgba(255, 255, 255, 0.9);
-  color: var(--secondary);
+  color: var(--text-primary);
   border: 1px solid var(--border-light);
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
@@ -162,7 +152,6 @@ body {
   box-shadow: 0 6px 20px 0 var(--success-glow);
 }
 
-/* Gradient Button */
 .btn-gradient {
   background: var(--gradient-brand);
   color: #FFFFFF;
@@ -174,7 +163,7 @@ body {
   box-shadow: 0 8px 25px 0 var(--primary-glow);
 }
 
-/* Typography Gradient */
+/* ===== TYPOGRAPHY ===== */
 .text-gradient {
   background: var(--gradient-brand);
   -webkit-background-clip: text;
@@ -190,7 +179,11 @@ body {
   color: var(--accent);
 }
 
-/* Animations */
+.font-brand {
+  font-family: var(--font-brand);
+}
+
+/* ===== ANIMATIONS ===== */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -235,7 +228,7 @@ body {
   animation-delay: 0.3s;
 }
 
-/* Grid Helper */
+/* ===== GRID ===== */
 .grid-bento {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
@@ -257,20 +250,19 @@ body {
   }
 }
 
-/* Select Options Fix - Opciones visibles */
+/* ===== FORM INPUTS ===== */
 select option {
   background-color: #ffffff;
   color: #000000;
 }
 
-/* Phone Input Overrides */
 .PhoneInput {
   display: flex;
   align-items: center;
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 12px;
-  background-color: #F8FAFC;
+  background-color: var(--bg-secondary);
   border: 1px solid var(--border-light);
   transition: all 0.3s ease;
 }
@@ -290,6 +282,7 @@ select option {
   outline: none;
   font-size: 1rem;
   color: var(--text-primary);
+  font-family: var(--font-sans);
 }
 
 .PhoneInputInput::placeholder {
@@ -328,11 +321,11 @@ select option {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-/* Modern Input Styles */
 input:not([type="checkbox"]):not([type="radio"]),
 textarea,
 select {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: var(--font-sans);
 }
 
 input:not([type="checkbox"]):not([type="radio"]):focus,
@@ -343,14 +336,14 @@ select:focus {
   outline: none;
 }
 
-/* Scrollbar Styling */
+/* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-main);
+  background: var(--bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
