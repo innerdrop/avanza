@@ -14,7 +14,7 @@ import path from 'path';
 export const sendEmail = async (to: string, subject: string, html: string) => {
     console.log(`[Email] Attempting to send email to ${to} with subject: ${subject}`);
     try {
-        const logoPath = path.join(process.cwd(), 'public', 'logo.png');
+        const logoPath = path.join(process.cwd(), 'public', 'moovy-logo.svg');
 
         const info = await transporter.sendMail({
             from: process.env.SMTP_EMAIL,
@@ -23,7 +23,7 @@ export const sendEmail = async (to: string, subject: string, html: string) => {
             html,
             attachments: [
                 {
-                    filename: 'logo.png',
+                    filename: 'logo.svg',
                     path: logoPath,
                     cid: 'logo' // matches <img src="cid:logo">
                 }
