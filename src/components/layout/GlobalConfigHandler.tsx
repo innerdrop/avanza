@@ -48,7 +48,7 @@ export default function GlobalConfigHandler({ children }: { children: React.Reac
                         Por favor, vuelve a intentarlo más tarde.
                     </p>
                     <div className="pt-4">
-                        <p className="text-sm text-gray-500">Equipo Avanza Fueguino</p>
+                        <p className="text-sm text-gray-500">Equipo Moovy Jobs</p>
                     </div>
                 </div>
             </div>

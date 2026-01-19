@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import PremiumLockModal from "@/components/premium/PremiumLockModal";
 
 export default function NuevoAnuncioPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [showPremiumModal, setShowPremiumModal] = useState(false);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -52,6 +54,13 @@ export default function NuevoAnuncioPage() {
             }
 
             const data = await res.json();
+
+            // Check for job limit reached error
+            if (res.status === 403 && data.code === 'JOB_LIMIT_REACHED') {
+                setShowPremiumModal(true);
+                setLoading(false);
+                return;
+            }
 
             if (res.ok) {
                 if (data.createdPayment) {
@@ -270,6 +279,13 @@ export default function NuevoAnuncioPage() {
                     </form>
                 </div>
             </main>
+
+            {/* Premium Lock Modal */}
+            {showPremiumModal && (
+                <PremiumLockModal
+                    onClose={() => setShowPremiumModal(false)}
+                />
+            )}
         </div>
     );
 }

@@ -45,7 +45,7 @@ export async function POST(request: Request) {
                 <div style="text-align: right; margin-bottom: 20px;">
                     <img src="cid:logo" alt="Logo" style="width: 50px; height: auto;">
                 </div>
-                <h2 style="color: #007bff;">¡Bienvenido/a a Avanza Fueguino, ${name}!</h2>
+                <h2 style="color: #007bff;">¡Bienvenido/a a Moovy Jobs, ${name}!</h2>
                 <p>Tu cuenta de empresa ha sido creada exitosamente. Ahora puedes publicar ofertas laborales y encontrar el talento que tu organización necesita.</p>
                 <p>A partir de ahora podrás:</p>
                 <ul>
@@ -60,12 +60,12 @@ export async function POST(request: Request) {
                 <p>Si tienes alguna consulta, no dudes en contactarnos.</p>
                 <br>
                 <hr>
-                <p style="font-size: 12px; color: #777;">&copy; ${new Date().getFullYear()} Avanza Fueguino</p>
+                <p style="font-size: 12px; color: #777;">&copy; ${new Date().getFullYear()} Moovy Jobs</p>
             </div>
         `;
 
         const { sendEmail } = await import('@/lib/email');
-        sendEmail(email, "¡Bienvenido a Avanza Fueguino! - Registro Exitoso", welcomeEmailHtml).catch(err => {
+        sendEmail(email, "¡Bienvenido a Moovy Jobs! - Registro Exitoso", welcomeEmailHtml).catch(err => {
             console.error('Failed to send welcome email:', err);
         });
 

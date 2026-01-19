@@ -58,14 +58,14 @@ export async function POST(req: NextRequest) {
             </head>
             <body>
                 <div class="header">
-                    <img src="cid:logo" alt="Avanza Fueguino" class="logo" />
+                    <img src="cid:logo" alt="Moovy Jobs" class="logo" />
                 </div>
                 <div class="content">
                     ${message.replace(/\n/g, '<br>')}
                 </div>
                 <div class="footer">
-                    <p>Este mensaje fue enviado a través de la plataforma Avanza Fueguino</p>
-                    <p>© ${new Date().getFullYear()} Avanza Fueguino - Empleo y Talento</p>
+                    <p>Este mensaje fue enviado a través de la plataforma Moovy Jobs</p>
+                    <p>© ${new Date().getFullYear()} Moovy Jobs - Empleo y Talento</p>
                 </div>
             </body>
             </html>

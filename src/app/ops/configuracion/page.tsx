@@ -10,7 +10,9 @@ export default function ConfiguracionPage() {
         maintenance_mode: false,
         notifications_email: true,
         notifications_new_user: true,
-        notifications_telegram: false
+        notifications_telegram: false,
+        job_posting_limit_free: '3',
+        job_posting_limit_premium: '-1'
     });
     const [darkMode, setDarkMode] = useState(false);
     const [localChanges, setLocalChanges] = useState<Record<string, boolean>>({});
@@ -33,7 +35,9 @@ export default function ConfiguracionPage() {
                         maintenance_mode: data.maintenance_mode === 'true',
                         notifications_email: data.notifications_email === 'true',
                         notifications_new_user: data.notifications_new_user === 'true',
-                        notifications_telegram: data.notifications_telegram === 'true'
+                        notifications_telegram: data.notifications_telegram === 'true',
+                        job_posting_limit_free: data.job_posting_limit_free || '3',
+                        job_posting_limit_premium: data.job_posting_limit_premium || '-1'
                     });
                 }
             } catch (error) {
@@ -202,6 +206,45 @@ export default function ConfiguracionPage() {
                                     </label>
                                 </div>
                             </div>
+                        </div>
+
+                        {/* Límites de Publicación */}
+                        <div className="space-y-4">
+                            <h3 className="font-semibold text-lg text-[var(--text-primary)] border-b pb-2">Límites de Publicación de Empleos</h3>
+
+                            {/* Free Company Limit */}
+                            <div className="flex items-center justify-between p-2 rounded-lg hover:bg-[var(--bg-card-hover)] transition-colors">
+                                <div className="space-y-1">
+                                    <span className="text-base font-medium text-[var(--text-primary)]">Empresas Free</span>
+                                    <p className="text-sm text-[var(--text-secondary)]">Cantidad máxima de empleos que puede publicar una empresa gratuita.</p>
+                                </div>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    value={configs.job_posting_limit_free}
+                                    onChange={(e) => handleInputChange('job_posting_limit_free', e.target.value)}
+                                    className="w-20 px-3 py-2 text-center text-base font-medium border border-[var(--border-light)] rounded-lg bg-[var(--bg-main)] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                                />
+                            </div>
+
+                            {/* Premium Company Limit */}
+                            <div className="flex items-center justify-between p-2 rounded-lg hover:bg-[var(--bg-card-hover)] transition-colors">
+                                <div className="space-y-1">
+                                    <span className="text-base font-medium text-[var(--text-primary)]">Empresas Premium</span>
+                                    <p className="text-sm text-[var(--text-secondary)]">Cantidad máxima de empleos para empresas premium. Usar -1 para ilimitado.</p>
+                                </div>
+                                <input
+                                    type="number"
+                                    min="-1"
+                                    value={configs.job_posting_limit_premium}
+                                    onChange={(e) => handleInputChange('job_posting_limit_premium', e.target.value)}
+                                    className="w-20 px-3 py-2 text-center text-base font-medium border border-[var(--border-light)] rounded-lg bg-[var(--bg-main)] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                                />
+                            </div>
+
+                            <p className="text-xs text-[var(--text-secondary)] bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+                                💡 <strong>Nota:</strong> Estos límites se aplican a las nuevas publicaciones. El valor -1 significa sin límite.
+                            </p>
                         </div>
 
                     </div>

@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import PremiumLockModal from "@/components/premium/PremiumLockModal";
 
-type Tab = 'empleos' | 'postulaciones';
+type Tab = 'empleos' | 'postulaciones' | 'pagos';
 
 export default function DashboardEmpresaPage() {
     const router = useRouter();
@@ -46,6 +46,16 @@ export default function DashboardEmpresaPage() {
         message: string;
     } | null>(null);
     const [sendingEmail, setSendingEmail] = useState(false);
+
+    // Payment notification state
+    const [notifyingPayment, setNotifyingPayment] = useState(false);
+    const [paymentNotified, setPaymentNotified] = useState(false);
+
+    // Subscription cancellation state
+    const [subscriptionRemainingDays, setSubscriptionRemainingDays] = useState<number | null>(null);
+    const [subscriptionEndsAt, setSubscriptionEndsAt] = useState<string | null>(null);
+    const [isCancelled, setIsCancelled] = useState(false);
+    const [cancellingSubscription, setCancellingSubscription] = useState(false);
 
     useEffect(() => {
         fetchData();
@@ -93,6 +103,16 @@ export default function DashboardEmpresaPage() {
                 const subData = await subRes.json();
                 if (subData.subscription?.status === 'pending') {
                     setPendingSubscription(subData.subscription);
+                }
+                // Check for cancellation info
+                if (subData.subscription?.cancelledAt) {
+                    setIsCancelled(true);
+                    setSubscriptionRemainingDays(subData.remainingDays);
+                    setSubscriptionEndsAt(subData.subscriptionEndsAt);
+                } else {
+                    setIsCancelled(false);
+                    setSubscriptionRemainingDays(subData.remainingDays);
+                    setSubscriptionEndsAt(subData.subscriptionEndsAt);
                 }
             }
         } catch (error) {
@@ -148,6 +168,32 @@ export default function DashboardEmpresaPage() {
         document.cookie = 'user_role=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
         document.cookie = 'user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
         router.push('/empresas/login');
+    };
+
+    const handleCancelSubscription = async () => {
+        if (!confirm(`¿Estás seguro de que deseas cancelar tu suscripción Premium?\n\nTu acceso Premium continuará activo hasta que termine tu período actual${subscriptionRemainingDays ? ` (${subscriptionRemainingDays} días restantes)` : ''}.`)) {
+            return;
+        }
+
+        setCancellingSubscription(true);
+        try {
+            const res = await fetch('/api/company/subscribe', { method: 'DELETE' });
+            const data = await res.json();
+
+            if (res.ok) {
+                setIsCancelled(true);
+                setSubscriptionRemainingDays(data.remainingDays);
+                setSubscriptionEndsAt(data.subscriptionEndsAt);
+                alert(`✅ ${data.message}\n\nTe quedan ${data.remainingDays} días de Premium.`);
+            } else {
+                alert(`Error: ${data.error || 'Error al cancelar suscripción'}`);
+            }
+        } catch (error) {
+            console.error('Error cancelling subscription:', error);
+            alert('Error de conexión');
+        } finally {
+            setCancellingSubscription(false);
+        }
     };
 
     const handleDeleteJob = async (id: number) => {
@@ -408,6 +454,66 @@ export default function DashboardEmpresaPage() {
                     </div>
                 )}
 
+                {/* Premium Cancellation Info Banner */}
+                {companyPlan === 'premium' && isCancelled && subscriptionRemainingDays !== null && (
+                    <div className="mb-6 bg-red-50 border-2 border-red-300 rounded-xl p-5 shadow-sm">
+                        <div className="flex items-start gap-4">
+                            <div className="text-3xl">⚠️</div>
+                            <div className="flex-1">
+                                <h3 className="text-lg font-bold text-red-800 mb-1">Suscripción Premium Cancelada</h3>
+                                <p className="text-red-700 text-sm mb-2">
+                                    Tu suscripción fue cancelada. Seguirás teniendo acceso Premium hasta el final de tu período.
+                                </p>
+                                <div className="flex items-center gap-4 bg-white rounded-lg p-4 border border-red-200">
+                                    <div className="text-center">
+                                        <p className="text-4xl font-bold text-red-600">{subscriptionRemainingDays}</p>
+                                        <p className="text-xs text-red-500 uppercase font-medium">días restantes</p>
+                                    </div>
+                                    {subscriptionEndsAt && (
+                                        <div className="border-l border-red-200 pl-4">
+                                            <p className="text-sm text-slate-500">Finaliza el:</p>
+                                            <p className="font-semibold text-slate-800">
+                                                {new Date(subscriptionEndsAt).toLocaleDateString('es-AR', {
+                                                    day: 'numeric',
+                                                    month: 'long',
+                                                    year: 'numeric'
+                                                })}
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Premium Active - Cancel Option */}
+                {companyPlan === 'premium' && !isCancelled && (
+                    <div className="mb-6 bg-emerald-50 border-2 border-emerald-300 rounded-xl p-5 shadow-sm">
+                        <div className="flex items-start justify-between gap-4">
+                            <div className="flex items-start gap-4">
+                                <div className="text-3xl">👑</div>
+                                <div>
+                                    <h3 className="text-lg font-bold text-emerald-800 mb-1">Plan Premium Activo</h3>
+                                    <p className="text-emerald-700 text-sm">
+                                        Tienes acceso a todas las funciones de IA y herramientas avanzadas.
+                                        {subscriptionRemainingDays !== null && (
+                                            <span className="ml-2 font-medium">({subscriptionRemainingDays} días restantes)</span>
+                                        )}
+                                    </p>
+                                </div>
+                            </div>
+                            <button
+                                onClick={handleCancelSubscription}
+                                disabled={cancellingSubscription}
+                                className="px-4 py-2 text-sm text-red-600 hover:text-red-700 border border-red-300 rounded-lg hover:bg-red-50 transition-all disabled:opacity-50"
+                            >
+                                {cancellingSubscription ? 'Cancelando...' : 'Cancelar suscripción'}
+                            </button>
+                        </div>
+                    </div>
+                )}
+
                 {/* Tab Navigation */}
                 <div className="bg-white rounded-xl border border-gray-200 p-1.5 mb-6 inline-flex">
                     <button
@@ -432,6 +538,15 @@ export default function DashboardEmpresaPage() {
                             <span className="px-2 py-0.5 rounded-full text-xs bg-[#EF4444] text-white">{totalPendingApps}</span>
                         )}
                     </button>
+                    <button
+                        onClick={() => setActiveTab('pagos')}
+                        className={`px-5 py-2.5 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${activeTab === 'pagos'
+                            ? 'bg-[#0A66C2] text-white'
+                            : 'text-gray-600 hover:bg-[#F5F7FA]'
+                            }`}
+                    >
+                        💳 Pagos
+                    </button>
                 </div>
 
                 {loading ? (
@@ -448,13 +563,23 @@ export default function DashboardEmpresaPage() {
                                         <h2 className="text-xl font-bold text-[#1F2937]">Mis Publicaciones</h2>
                                         <p className="text-gray-500 text-sm mt-1">Gestiona tus ofertas de empleo</p>
                                     </div>
-                                    <Link
-                                        href="/empresas/nuevo-anuncio"
-                                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0A66C2] text-white font-semibold rounded-xl hover:bg-[#1F4ED8] transition-all"
-                                    >
-                                        <span className="text-lg">+</span>
-                                        Publicar Empleo
-                                    </Link>
+                                    {companyPlan !== 'premium' && jobs.length >= 1 ? (
+                                        <button
+                                            onClick={() => setShowPremiumModal(true)}
+                                            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-400 text-white font-semibold rounded-xl cursor-pointer hover:bg-gray-500 transition-all"
+                                        >
+                                            <span className="text-lg">🔒</span>
+                                            Publicar Empleo
+                                        </button>
+                                    ) : (
+                                        <Link
+                                            href="/empresas/nuevo-anuncio"
+                                            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0A66C2] text-white font-semibold rounded-xl hover:bg-[#1F4ED8] transition-all"
+                                        >
+                                            <span className="text-lg">+</span>
+                                            Publicar Empleo
+                                        </Link>
+                                    )}
                                 </div>
 
                                 {jobs.length === 0 ? (
@@ -710,6 +835,169 @@ export default function DashboardEmpresaPage() {
                                         </div>
                                     </div>
                                 )}
+                            </div>
+                        )}
+
+                        {/* ==================== PAGOS TAB ==================== */}
+                        {activeTab === 'pagos' && (
+                            <div className="space-y-6">
+                                <div>
+                                    <h2 className="text-xl font-bold text-[#1F2937]">Pagos y Suscripciones</h2>
+                                    <p className="text-gray-500 text-sm mt-1">Gestiona tu plan y revisa el historial de pagos</p>
+                                </div>
+
+                                {/* Subscription Section */}
+                                <div className="bg-white rounded-2xl border border-gray-200 p-6">
+                                    <h3 className="text-lg font-bold text-[#1F2937] mb-4 flex items-center gap-2">
+                                        👑 Suscripción Premium
+                                    </h3>
+
+                                    {companyPlan === 'premium' ? (
+                                        <div className="space-y-4">
+                                            {isCancelled ? (
+                                                <div className="bg-red-50 border border-red-200 rounded-xl p-5">
+                                                    <div className="flex items-center justify-between">
+                                                        <div>
+                                                            <p className="font-semibold text-red-800">Suscripción Cancelada</p>
+                                                            <p className="text-sm text-red-600">Seguirás teniendo acceso hasta que termine tu período.</p>
+                                                        </div>
+                                                        <div className="text-center bg-white rounded-lg px-4 py-2 border border-red-200">
+                                                            <p className="text-3xl font-bold text-red-600">{subscriptionRemainingDays}</p>
+                                                            <p className="text-xs text-red-500">días restantes</p>
+                                                        </div>
+                                                    </div>
+                                                    {subscriptionEndsAt && (
+                                                        <p className="mt-3 text-sm text-red-600">
+                                                            Finaliza el: <strong>{new Date(subscriptionEndsAt).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })}</strong>
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
+                                                    <div className="flex items-center justify-between">
+                                                        <div>
+                                                            <p className="font-semibold text-emerald-800">Plan Premium Activo ✓</p>
+                                                            <p className="text-sm text-emerald-600">Tienes acceso a todas las funciones de IA.</p>
+                                                            {subscriptionRemainingDays !== null && (
+                                                                <p className="text-sm text-emerald-700 mt-1 font-medium">{subscriptionRemainingDays} días restantes en tu período actual</p>
+                                                            )}
+                                                        </div>
+                                                        <span className="px-4 py-2 bg-emerald-600 text-white font-bold rounded-xl">$15.000/mes</span>
+                                                    </div>
+                                                    <div className="mt-4 pt-4 border-t border-emerald-200">
+                                                        <button
+                                                            onClick={handleCancelSubscription}
+                                                            disabled={cancellingSubscription}
+                                                            className="text-sm text-red-500 hover:text-red-700 hover:underline disabled:opacity-50"
+                                                        >
+                                                            {cancellingSubscription ? 'Cancelando...' : 'Cancelar suscripción'}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : pendingSubscription ? (
+                                        <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+                                            <p className="font-semibold text-amber-800 mb-2">Pago Pendiente</p>
+                                            <p className="text-sm text-amber-600 mb-3">Realiza la transferencia para activar tu suscripción Premium.</p>
+                                            <div className="grid grid-cols-2 gap-4 text-sm">
+                                                <div>
+                                                    <span className="text-slate-500">Monto:</span>
+                                                    <span className="ml-2 font-bold text-emerald-600">${pendingSubscription.amount?.toLocaleString('es-AR')}</span>
+                                                </div>
+                                                <div>
+                                                    <span className="text-slate-500">Alias:</span>
+                                                    <span className="ml-2 font-bold text-slate-800">iyad.bbva</span>
+                                                </div>
+                                            </div>
+                                            <Link href="/empresas/premium" className="mt-4 inline-block text-sm text-blue-600 hover:underline">
+                                                Ver detalles completos →
+                                            </Link>
+                                        </div>
+                                    ) : (
+                                        <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 text-center">
+                                            <p className="text-gray-600 mb-4">No tienes suscripción Premium activa.</p>
+                                            <Link
+                                                href="/empresas/premium"
+                                                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-yellow-600 transition-all"
+                                            >
+                                                ✨ Ver planes Premium
+                                            </Link>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Payments History */}
+                                <div className="bg-white rounded-2xl border border-gray-200 p-6">
+                                    <h3 className="text-lg font-bold text-[#1F2937] mb-4 flex items-center gap-2">
+                                        📋 Historial de Pagos
+                                    </h3>
+
+                                    {jobs.some(j => j.payments && j.payments.length > 0) ? (
+                                        <div className="overflow-x-auto">
+                                            <table className="w-full">
+                                                <thead className="border-b border-gray-200 bg-[#F5F7FA]">
+                                                    <tr className="text-left text-xs text-gray-500 uppercase">
+                                                        <th className="py-3 px-4 font-semibold">Concepto</th>
+                                                        <th className="py-3 px-4 font-semibold">Empleo</th>
+                                                        <th className="py-3 px-4 font-semibold">Monto</th>
+                                                        <th className="py-3 px-4 font-semibold">Estado</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-gray-100">
+                                                    {jobs.flatMap(job =>
+                                                        (job.payments || []).map((payment: any) => (
+                                                            <tr key={payment.id} className="hover:bg-[#F5F7FA]">
+                                                                <td className="py-3 px-4">
+                                                                    <span className="font-medium text-[#1F2937]">
+                                                                        ⭐ Publicación Destacada
+                                                                    </span>
+                                                                    {payment.externalId && (
+                                                                        <span className="text-xs text-gray-500 block">
+                                                                            {payment.externalId.replace('featured_', '').replace('_days', ' días')}
+                                                                        </span>
+                                                                    )}
+                                                                </td>
+                                                                <td className="py-3 px-4 text-sm text-gray-600">{job.title}</td>
+                                                                <td className="py-3 px-4 font-medium text-[#1F2937]">
+                                                                    ${payment.amount?.toLocaleString('es-AR')}
+                                                                </td>
+                                                                <td className="py-3 px-4">
+                                                                    <span className={`px-2.5 py-1 text-xs rounded-full font-medium ${payment.status === 'completed'
+                                                                        ? 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+                                                                        : payment.status === 'pending'
+                                                                            ? 'bg-amber-100 text-amber-700 border border-amber-200'
+                                                                            : 'bg-gray-100 text-gray-600'
+                                                                        }`}>
+                                                                        {payment.status === 'completed' ? '✓ Pagado' :
+                                                                            payment.status === 'pending' ? '⏳ Pendiente' : payment.status}
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        ))
+                                                    )}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-8 text-gray-500">
+                                            <p className="text-4xl mb-2 opacity-50">📄</p>
+                                            <p>No hay pagos registrados aún.</p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Payment Info */}
+                                <div className="bg-[#DBEAFE] border border-[#0A66C2]/20 rounded-xl p-5">
+                                    <h4 className="font-semibold text-[#1F4ED8] mb-2 flex items-center gap-2">
+                                        <span>💡</span> Información de Pago
+                                    </h4>
+                                    <ul className="text-sm text-[#1F4ED8] space-y-1.5">
+                                        <li>• Todos los pagos se realizan por transferencia bancaria.</li>
+                                        <li>• <strong>Alias:</strong> iyad.bbva | <strong>Titular:</strong> Iyad Marmoud</li>
+                                        <li>• Una vez realizada la transferencia, notificanos usando el botón en cada orden pendiente.</li>
+                                    </ul>
+                                </div>
                             </div>
                         )}
                     </>
@@ -1014,15 +1302,68 @@ export default function DashboardEmpresaPage() {
                                 </p>
                             </div>
 
+                            {/* Notify Payment Button */}
+                            {!paymentNotified ? (
+                                <button
+                                    onClick={async () => {
+                                        setNotifyingPayment(true);
+                                        try {
+                                            const pendingPayment = selectedJobForPayment.payments?.find((p: any) => p.status === 'pending');
+                                            const res = await fetch('/api/company/notify-payment', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({
+                                                    type: 'featured',
+                                                    jobTitle: selectedJobForPayment.title,
+                                                    amount: pendingPayment?.amount || 0,
+                                                    companyName: companyName
+                                                })
+                                            });
+                                            if (res.ok) {
+                                                setPaymentNotified(true);
+                                                alert('✅ Notificación enviada al administrador. Revisaremos tu transferencia pronto.');
+                                            } else {
+                                                const data = await res.json();
+                                                alert(`Error: ${data.error || 'Error al notificar'}`);
+                                            }
+                                        } catch (error) {
+                                            console.error('Error notifying payment:', error);
+                                            alert('Error de conexión');
+                                        } finally {
+                                            setNotifyingPayment(false);
+                                        }
+                                    }}
+                                    disabled={notifyingPayment}
+                                    className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
+                                >
+                                    {notifyingPayment ? (
+                                        <>
+                                            <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                            Enviando...
+                                        </>
+                                    ) : (
+                                        '📩 Ya realicé la transferencia'
+                                    )}
+                                </button>
+                            ) : (
+                                <div className="w-full py-3 bg-emerald-100 text-emerald-700 font-semibold rounded-xl text-center border border-emerald-300">
+                                    ✅ Notificación enviada
+                                </div>
+                            )}
+
                             {/* Close Button */}
                             <button
                                 onClick={() => {
                                     setShowPaymentModal(false);
                                     setSelectedJobForPayment(null);
+                                    setPaymentNotified(false);
                                 }}
                                 className="w-full py-3 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl transition-colors"
                             >
-                                Entendido
+                                Cerrar
                             </button>
                         </div>
                     </div>
@@ -1250,9 +1591,14 @@ export default function DashboardEmpresaPage() {
                 </div>
             )}
 
+
             {/* Premium Lock Modal */}
             {showPremiumModal && (
-                <PremiumLockModal onClose={() => setShowPremiumModal(false)} />
+                <PremiumLockModal
+                    onClose={() => setShowPremiumModal(false)}
+                    title="Límite de Publicaciones Alcanzado"
+                    message="Has alcanzado el límite de 1 publicación gratuita. Actualiza a Premium para publicar empleos ilimitados y acceder a herramientas de IA."
+                />
             )}
         </div>
     );

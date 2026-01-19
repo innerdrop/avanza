@@ -70,7 +70,10 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                         ← Volver al sitio
                     </Link>
                 </div>
-                <h1 className="text-lg sm:text-xl font-bold text-[var(--primary)] truncate">Avanza Fueguino</h1>
+                <div className="flex items-center gap-1">
+                    <span className="text-lg sm:text-xl font-extrabold text-white tracking-widest" style={{ fontFamily: "'Junegull', 'Nunito', 'Quicksand', sans-serif" }}>MOOVY</span>
+                    <span className="text-lg sm:text-xl font-bold text-[var(--primary)]" style={{ fontFamily: "'Inter', sans-serif" }}>Jobs</span>
+                </div>
                 <div className="flex items-center gap-3">
                     <span className="text-sm font-medium text-[var(--text-primary)] hidden sm:block">Administrador</span>
                     <div className="w-8 h-8 rounded-full bg-[var(--primary)] flex items-center justify-center text-white font-bold text-sm">A</div>

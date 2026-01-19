@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 60" fill="none">
+  <!-- MOOVY text - Junegull Regular style (thick, rounded, all caps), Dark gray -->
+  <text x="0" y="42" font-family="'Junegull', 'Nunito', 'Quicksand', 'Poppins', system-ui, sans-serif" font-size="48" font-weight="900" fill="#1E293B" letter-spacing="1">
+    MOOVY
+  </text>
+  <!-- Jobs text - Blue, slightly larger, different font weight -->
+  <text x="185" y="44" font-family="'Inter', 'Roboto', system-ui, sans-serif" font-size="52" font-weight="700" fill="#3B82F6" letter-spacing="-0.5">
+    Jobs
+  </text>
+</svg>

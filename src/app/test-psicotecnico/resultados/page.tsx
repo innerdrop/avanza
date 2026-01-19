@@ -114,7 +114,7 @@ export default function ResultadosPage() {
                         </div>
 
                         <div className="p-6 bg-blue-50 rounded-xl border border-blue-100 mt-8 text-center text-sm text-[var(--text-secondary)]">
-                            Este informe es una herramienta de autoconocimiento generada por <strong>Avanza Fueguino</strong>.
+                            Este informe es una herramienta de autoconocimiento generada por <strong>Moovy Jobs</strong>.
                             Úsalo para potenciar tu búsqueda laboral y resaltar tus fortalezas en tu CV.
                         </div>
                     </div>

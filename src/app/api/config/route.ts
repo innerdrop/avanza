@@ -24,7 +24,9 @@ export async function GET() {
             maintenance_mode: 'false',
             notifications_email: 'true',
             notifications_new_user: 'true',
-            notifications_telegram: 'false'
+            notifications_telegram: 'false',
+            job_posting_limit_free: '3',
+            job_posting_limit_premium: '-1'
         };
 
         return NextResponse.json({ ...defaults, ...configMap });

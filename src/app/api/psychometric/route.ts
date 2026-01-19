@@ -9,9 +9,21 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { email, nombre, respuestas, resultado } = body;
 
+        // Check if email has already taken the test
+        const existingTest = await prisma.psychometricTest.findFirst({
+            where: { email: email.toLowerCase().trim() }
+        });
+
+        if (existingTest) {
+            return NextResponse.json(
+                { error: 'Ya has realizado el test psicotécnico anteriormente con este correo electrónico.' },
+                { status: 409 }
+            );
+        }
+
         const test = await prisma.psychometricTest.create({
             data: {
-                email,
+                email: email.toLowerCase().trim(),
                 nombre,
                 respuestas: JSON.stringify(respuestas),
                 resultado: JSON.stringify(resultado),
@@ -45,15 +57,15 @@ export async function POST(request: Request) {
                     <img src="cid:logo" alt="Logo" style="width: 50px; height: auto;">
                 </div>
                 <h2 style="color: #28a745;">¡Test Completado, ${nombre}!</h2>
-                <p>Has finalizado exitosamente el test psicotécnico en <strong>Avanza Fueguino</strong>.</p>
+                <p>Has finalizado exitosamente el test psicotécnico en <strong>Moovy Jobs</strong>.</p>
                 <p>Tus resultados han sido registrados y serán tenidos en cuenta para futuras oportunidades laborales que coincidan con tu perfil.</p>
                 <p>¡Muchas gracias por participar!</p>
                 <br>
                 <hr>
-                <p style="font-size: 12px; color: #777;">&copy; ${new Date().getFullYear()} Avanza Fueguino</p>
+                <p style="font-size: 12px; color: #777;">&copy; ${new Date().getFullYear()} Moovy Jobs</p>
             </div>
         `;
-        sendEmail(email, "Has completado el test psicotécnico - Avanza Fueguino", userEmailHtml).catch(err => {
+        sendEmail(email, "Has completado el test psicotécnico - Moovy Jobs", userEmailHtml).catch(err => {
             console.error("Failed to send test user confirmation:", err);
         });
 

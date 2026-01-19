@@ -86,7 +86,7 @@ export async function PATCH(request: Request) {
                 }
                     <br>
                     <hr>
-                    <p style="font-size: 12px; color: #777;">&copy; ${new Date().getFullYear()} Avanza Fueguino</p>
+                    <p style="font-size: 12px; color: #777;">&copy; ${new Date().getFullYear()} Moovy Jobs</p>
                 </div>
             `;
 

@@ -39,8 +39,11 @@ export default function LoginPage() {
     return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
-                <div className="p-8 text-center bg-[var(--primary)] text-white">
-                    <h1 className="text-3xl font-bold mb-2">Avanza Fueguino</h1>
+                <div className="p-8 text-center bg-[var(--secondary)] text-white">
+                    <div className="flex items-center justify-center gap-1 mb-2">
+                        <span className="text-3xl font-extrabold text-white tracking-widest" style={{ fontFamily: "'Junegull', 'Nunito', 'Quicksand', sans-serif" }}>MOOVY</span>
+                        <span className="text-3xl font-bold text-[var(--primary)]" style={{ fontFamily: "'Inter', sans-serif" }}>Jobs</span>
+                    </div>
                     <p className="opacity-90">Acceso Administrativo (OPS)</p>
                 </div>
 

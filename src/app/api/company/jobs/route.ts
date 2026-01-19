@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
-import { notifyAdmin } from '@/lib/notifications';
 
 // Helper to get company user ID from cookie
 async function getCompanyUserId(): Promise<number | null> {
@@ -86,10 +85,28 @@ export async function POST(request: Request) {
         // Get company name from the logged-in user
         const companyUser = await prisma.user.findUnique({
             where: { id: companyUserId },
-            select: { name: true, email: true }
+            select: { name: true, email: true, plan: true }
         });
 
         const companyName = companyUser?.name || 'Empresa';
+
+        // Check job limit for non-premium companies
+        const MAX_JOBS_FREE = 1;
+        if (companyUser?.plan !== 'premium') {
+            const existingJobsCount = await prisma.jobPosting.count({
+                where: { companyUserId }
+            });
+
+            if (existingJobsCount >= MAX_JOBS_FREE) {
+                return NextResponse.json(
+                    {
+                        error: 'Has alcanzado el límite de publicaciones gratuitas. Actualiza a Premium para publicar sin límites.',
+                        code: 'JOB_LIMIT_REACHED'
+                    },
+                    { status: 403 }
+                );
+            }
+        }
 
         const job = await prisma.jobPosting.create({
             data: {
@@ -108,7 +125,7 @@ export async function POST(request: Request) {
             } as any
         });
 
-        // Notify admin about new job request
+        // Notify admin about new job request with action buttons
         const emailHtml = `
             <h2>Nueva Solicitud de Publicación</h2>
             <p><strong>Empresa:</strong> ${companyName}</p>
@@ -119,9 +136,22 @@ export async function POST(request: Request) {
             <p>Ingresa al panel de administración para revisar y aprobar esta solicitud.</p>
         `;
 
-        const telegramText = `<b>Nueva Solicitud de Publicación</b>\n\n<b>Empresa:</b> ${companyName}\n<b>Puesto:</b> ${title}\n<b>Ubicación:</b> ${location}\n<b>Destacado:</b> ${isFeatured ? 'Sí' : 'No'}`;
+        const telegramText = `📋 <b>Nueva Solicitud de Publicación</b>\n\n<b>Empresa:</b> ${companyName}\n<b>Puesto:</b> ${title}\n<b>Ubicación:</b> ${location}\n<b>Tipo:</b> ${type}\n<b>Destacado:</b> ${isFeatured ? 'Sí' : 'No'}\n\n🆔 ID: #${job.id}`;
 
-        notifyAdmin('Nueva Solicitud de Publicación', emailHtml, telegramText).catch(err => {
+        // Import notifyAdminWithButtons for Telegram buttons
+        const { notifyAdminWithButtons } = await import('@/lib/notifications');
+
+        notifyAdminWithButtons(
+            'Nueva Solicitud de Publicación',
+            emailHtml,
+            telegramText,
+            [
+                [
+                    { text: '✓ Aprobar', callback_data: `job_approve_${job.id}` },
+                    { text: '✗ Rechazar', callback_data: `job_reject_${job.id}` }
+                ]
+            ]
+        ).catch(err => {
             console.error('Failed to send admin notification:', err);
         });
 
@@ -148,12 +178,12 @@ export async function POST(request: Request) {
                     <p>Puedes seguir el estado de tus publicaciones desde tu panel de control.</p>
                     <br>
                     <hr>
-                    <p style="font-size: 12px; color: #777;">&copy; ${new Date().getFullYear()} Avanza Fueguino</p>
+                    <p style="font-size: 12px; color: #777;">&copy; ${new Date().getFullYear()} Moovy Jobs</p>
                 </div>
             `;
 
             const { sendEmail } = await import('@/lib/email');
-            sendEmail(companyUser.email, "Tu anuncio está en revisión - Avanza Fueguino", companyEmailHtml).catch(err => {
+            sendEmail(companyUser.email, "Tu anuncio está en revisión - Moovy Jobs", companyEmailHtml).catch(err => {
                 console.error('Failed to send company job confirmation:', err);
             });
         }

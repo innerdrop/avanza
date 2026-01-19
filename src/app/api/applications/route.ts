@@ -69,6 +69,25 @@ export async function POST(request: Request) {
         const finalExperiencia = experiencia || 'N/A';
         const finalDisponibilidad = disponibilidad || 'N/A';
 
+        // Check for duplicate application (same email + same job)
+        const normalizedEmail = email.toLowerCase().trim();
+        const existingApplication = await prisma.application.findFirst({
+            where: {
+                email: normalizedEmail,
+                jobPostingId: jobPostingId ? parseInt(jobPostingId) : null
+            }
+        });
+
+        if (existingApplication) {
+            const message = jobPostingId
+                ? 'Ya te has postulado a este empleo con este correo electrónico.'
+                : 'Ya has enviado una candidatura espontánea con este correo electrónico.';
+            return NextResponse.json(
+                { error: message },
+                { status: 409 }
+            );
+        }
+
         let cvUrl = null;
 
         // Handle File Upload
@@ -98,7 +117,7 @@ export async function POST(request: Request) {
         const application = await prisma.application.create({
             data: {
                 nombre,
-                email,
+                email: normalizedEmail,
                 telefono,
                 linkedin: linkedin || null,
                 area: finalArea,
@@ -146,7 +165,7 @@ export async function POST(request: Request) {
         });
 
         // --- NEW: Confirmation email to Candidate ---
-        const targetCompany = jobCompany || 'Avanza Fueguino';
+        const targetCompany = jobCompany || 'Moovy Jobs';
 
         const userEmailHtml = `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e1e1e1; border-radius: 10px; position: relative;">
@@ -160,7 +179,7 @@ export async function POST(request: Request) {
                 <br>
                 <hr>
                 <p style="font-size: 12px; color: #777;">Este es un mensaje automático, por favor no respondas a este correo.</p>
-                <p style="font-size: 12px; color: #777;">&copy; ${new Date().getFullYear()} Avanza Fueguino</p>
+                <p style="font-size: 12px; color: #777;">&copy; ${new Date().getFullYear()} Moovy Jobs</p>
             </div>
         `;
 

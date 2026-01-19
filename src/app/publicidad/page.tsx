@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 export const metadata = {
-    title: "Publicita con Nosotros | Avanza Fueguino",
+    title: "Publicita con Nosotros | Moovy Jobs",
     description: "Llega al mejor talento de Tierra del Fuego con nuestras soluciones de publicidad premium.",
 };
 

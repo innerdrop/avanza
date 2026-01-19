@@ -4,9 +4,11 @@ import Link from "next/link";
 
 interface PremiumLockModalProps {
     onClose: () => void;
+    title?: string;
+    message?: string;
 }
 
-export default function PremiumLockModal({ onClose }: PremiumLockModalProps) {
+export default function PremiumLockModal({ onClose, title, message }: PremiumLockModalProps) {
     return (
         <div
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
@@ -21,14 +23,18 @@ export default function PremiumLockModal({ onClose }: PremiumLockModalProps) {
                         👑
                     </div>
                     <h2 className="text-2xl font-bold text-white drop-shadow-md">
-                        Función Premium
+                        {title || "Función Premium"}
                     </h2>
                 </div>
 
                 {/* Body */}
                 <div className="p-6 text-center">
                     <p className="text-slate-600 mb-2">
-                        Esta funcionalidad de <strong className="text-indigo-600">Inteligencia Artificial</strong> está disponible exclusivamente para suscriptores Premium.
+                        {message || (
+                            <>
+                                Esta funcionalidad de <strong className="text-indigo-600">Inteligencia Artificial</strong> está disponible exclusivamente para suscriptores Premium.
+                            </>
+                        )}
                     </p>
                     <p className="text-slate-500 text-sm mb-6">
                         Accede a análisis de CV con IA, búsqueda de talento inteligente y mucho más.

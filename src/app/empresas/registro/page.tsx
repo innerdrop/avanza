@@ -60,8 +60,9 @@ export default function RegistroEmpresaPage() {
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
-                    <Link href="/" className="inline-block">
-                        <img src="/logo.png" alt="Avanza Fueguino" className="h-12 mx-auto mb-4" />
+                    <Link href="/" className="inline-flex items-center justify-center gap-1 mb-4">
+                        <span className="text-3xl font-extrabold text-[var(--secondary)] tracking-widest" style={{ fontFamily: "'Junegull', 'Nunito', 'Quicksand', sans-serif" }}>MOOVY</span>
+                        <span className="text-3xl font-bold text-[var(--primary)]" style={{ fontFamily: "'Inter', sans-serif" }}>Jobs</span>
                     </Link>
                     <h1 className="text-2xl font-bold text-gray-900">Crear Cuenta de Empresa</h1>
                     <p className="text-gray-600 mt-2">Publica tus ofertas de empleo en nuestra plataforma</p>

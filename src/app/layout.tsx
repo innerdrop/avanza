@@ -13,8 +13,11 @@ export const viewport: Viewport = {
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Avanza Fueguino - Empleo y Talento",
+  title: "Moovy Jobs - Empleo y Talento",
   description: "Tu plataforma de confianza para buscar empleo y talento en Tierra del Fuego.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -24,6 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
+      <head>
+        <link href="https://fonts.cdnfonts.com/css/junegull" rel="stylesheet" />
+      </head>
       <body className={inter.variable}>
         <GlobalConfigHandler>
           <ClientLayout>

@@ -76,9 +76,93 @@ export async function GET() {
             where: { userId: companyUserId }
         });
 
-        return NextResponse.json({ subscription });
+        // Calculate remaining days if subscription is being cancelled
+        let remainingDays = null;
+        let subscriptionEndsAt = null;
+
+        if (subscription?.status === 'completed' && subscription?.confirmedAt) {
+            // Subscription lasts 30 days from confirmation
+            const endDate = new Date(subscription.confirmedAt);
+            endDate.setDate(endDate.getDate() + 30);
+            subscriptionEndsAt = endDate.toISOString();
+
+            const now = new Date();
+            const diffTime = endDate.getTime() - now.getTime();
+            remainingDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            // If subscription has expired, update status
+            if (remainingDays <= 0 && subscription.cancelledAt) {
+                await prisma.premiumSubscription.update({
+                    where: { id: subscription.id },
+                    data: { status: 'cancelled' }
+                });
+                // Downgrade user plan
+                await prisma.user.update({
+                    where: { id: companyUserId },
+                    data: { plan: 'basic' }
+                });
+                return NextResponse.json({
+                    subscription: { ...subscription, status: 'cancelled' },
+                    remainingDays: 0,
+                    subscriptionEndsAt
+                });
+            }
+        }
+
+        return NextResponse.json({ subscription, remainingDays, subscriptionEndsAt });
     } catch (error) {
         console.error('Error fetching subscription:', error);
         return NextResponse.json({ error: 'Error al obtener suscripción' }, { status: 500 });
+    }
+}
+
+// DELETE: Cancel subscription (will remain active until end of period)
+export async function DELETE() {
+    try {
+        const companyUserId = await getCompanyUserId();
+
+        if (!companyUserId) {
+            return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+        }
+
+        const subscription = await prisma.premiumSubscription.findUnique({
+            where: { userId: companyUserId }
+        });
+
+        if (!subscription) {
+            return NextResponse.json({ error: 'No tienes suscripción activa' }, { status: 404 });
+        }
+
+        if (subscription.status !== 'completed') {
+            return NextResponse.json({ error: 'Solo puedes cancelar suscripciones activas' }, { status: 400 });
+        }
+
+        if (subscription.cancelledAt) {
+            return NextResponse.json({ error: 'La suscripción ya está programada para cancelarse' }, { status: 400 });
+        }
+
+        // Mark as cancelled but keep active until period ends
+        const updated = await prisma.premiumSubscription.update({
+            where: { id: subscription.id },
+            data: { cancelledAt: new Date() }
+        });
+
+        // Calculate remaining days - use confirmedAt if available, otherwise use createdAt
+        const startDate = subscription.confirmedAt ? new Date(subscription.confirmedAt) : new Date(subscription.createdAt);
+        const endDate = new Date(startDate);
+        endDate.setDate(endDate.getDate() + 30);
+        const now = new Date();
+        const diffTime = endDate.getTime() - now.getTime();
+        const remainingDays = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+
+        return NextResponse.json({
+            message: 'Suscripción cancelada. Seguirás teniendo acceso Premium hasta que termine tu período.',
+            subscription: updated,
+            remainingDays,
+            subscriptionEndsAt: endDate.toISOString()
+        });
+    } catch (error) {
+        console.error('Error cancelling subscription:', error);
+        return NextResponse.json({ error: 'Error al cancelar suscripción' }, { status: 500 });
     }
 }

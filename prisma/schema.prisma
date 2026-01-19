@@ -31,6 +31,7 @@ model PremiumSubscription {
   status      String    @default("pending") // pending, completed, cancelled
   createdAt   DateTime  @default(now())
   confirmedAt DateTime?
+  cancelledAt DateTime? // Date when user requested cancellation
 }
 
 model JobPosting {
