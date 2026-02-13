@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "3000:3000"
+      - "3080:3000"
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/modotrabajo
@@ -30,7 +30,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5435:5432"
+      - "5480:5432"
     networks:
       - modotrabajo_net
 
