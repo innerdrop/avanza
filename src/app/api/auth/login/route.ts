@@ -8,7 +8,7 @@ export async function POST(request: Request) {
         const { username, password, email } = body;
 
         // Check hardcoded admin credentials first
-        if (username === 'adminavanza' && password === 'ZA2025ava') {
+        if (username === 'admin@somosmoovy.com' && password === 'demo123') {
             const response = NextResponse.json({ success: true, role: 'admin' });
 
             response.cookies.set('auth_token', 'admin_session', {
