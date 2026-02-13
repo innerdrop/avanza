@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,81 +8,81 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  password  String
-  role      String   @default("user") // user, admin, company
-  plan      String   @default("basic") // basic, premium
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  jobPostings JobPosting[]
+  id                  Int                  @id @default(autoincrement())
+  email               String               @unique
+  name                String?
+  password            String
+  role                String               @default("user")
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  plan                String               @default("basic")
+  jobPostings         JobPosting[]
   premiumSubscription PremiumSubscription?
 }
 
 model PremiumSubscription {
   id          Int       @id @default(autoincrement())
   userId      Int       @unique
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   amount      Float     @default(15000)
-  status      String    @default("pending") // pending, completed, cancelled
+  status      String    @default("pending")
   createdAt   DateTime  @default(now())
   confirmedAt DateTime?
-  cancelledAt DateTime? // Date when user requested cancellation
+  cancelledAt DateTime?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model JobPosting {
-  id              Int           @id @default(autoincrement())
-  title           String
-  company         String
-  location        String
-  type            String        // Full Time, Part Time, Remoto
-  description     String
-  requirements    String        // JSON string array
-  responsibilities String       // JSON string array
-  benefits        String        // JSON string array
-  salary          String
-  status          String        @default("pending") // pending, active, inactive, closed, rejected
-  expiresAt       DateTime?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  applications    Application[]
-  isFeatured      Boolean       @default(false)
+  id                Int           @id @default(autoincrement())
+  title             String
+  company           String
+  location          String
+  type              String
+  description       String
+  requirements      String
+  responsibilities  String
+  benefits          String
+  salary            String
+  status            String        @default("pending")
+  expiresAt         DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
   featuredExpiresAt DateTime?
-  payments        Payment[]
-  companyUserId   Int?
-  companyUser     User?         @relation(fields: [companyUserId], references: [id])
+  isFeatured        Boolean       @default(false)
+  companyUserId     Int?
+  applications      Application[]
+  companyUser       User?         @relation(fields: [companyUserId], references: [id])
+  payments          Payment[]
 }
 
 model Payment {
-  id            Int      @id @default(autoincrement())
-  jobPostingId  Int
-  jobPosting    JobPosting @relation(fields: [jobPostingId], references: [id], onDelete: Cascade)
-  amount        Float
-  status        String   @default("pending") // pending, completed, failed
-  provider      String?  // stripe, mercadopago, manual
-  externalId    String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           Int        @id @default(autoincrement())
+  jobPostingId Int
+  amount       Float
+  status       String     @default("pending")
+  provider     String?
+  externalId   String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  jobPosting   JobPosting @relation(fields: [jobPostingId], references: [id], onDelete: Cascade)
 }
 
 model Application {
-  id              Int         @id @default(autoincrement())
-  jobPostingId    Int?
-  jobPosting      JobPosting? @relation(fields: [jobPostingId], references: [id], onDelete: Cascade)
-  nombre          String
-  email           String
-  telefono        String
-  linkedin        String?
-  area            String
-  experiencia     String
-  disponibilidad  String
-  presentacion    String?
-  cvUrl           String?     // Ruta del CV subido
-  status          String      @default("pending") // pending, reviewed, rejected, accepted
-  createdAt       DateTime    @default(now())
-    updatedAt       DateTime    @updatedAt
-  cVAnalysis      CVAnalysis?
+  id             Int         @id @default(autoincrement())
+  jobPostingId   Int?
+  nombre         String
+  email          String
+  telefono       String
+  linkedin       String?
+  area           String
+  experiencia    String
+  disponibilidad String
+  presentacion   String?
+  cvUrl          String?
+  status         String      @default("pending")
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  jobPosting     JobPosting? @relation(fields: [jobPostingId], references: [id], onDelete: Cascade)
+  cVAnalysis     CVAnalysis?
 }
 
 model ContentBlock {
@@ -97,12 +94,12 @@ model ContentBlock {
 }
 
 model PsychometricTest {
-  id        Int      @id @default(autoincrement())
-  email     String
-  nombre    String
-  respuestas String   // JSON string of answers
-  resultado  String   // JSON string of calculated result (type, scores, etc.)
-  createdAt DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  email      String
+  nombre     String
+  respuestas String
+  resultado  String
+  createdAt  DateTime @default(now())
 }
 
 model ContactMessage {
@@ -118,40 +115,30 @@ model ContactMessage {
 }
 
 model CVAnalysis {
-  id                Int         @id @default(autoincrement())
-  applicationId     Int         @unique
-  application       Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
-  
-  // Personal Info
-  fullName          String?
-  dni               String?
-  location          String?
-  maritalStatus     String?
-  phone             String?
-  email             String?
-
-  // Education Flags
-  hasPrimaryEducation   Boolean @default(false)
-  hasSecondaryEducation Boolean @default(false)
-  hasTertiaryEducation  Boolean @default(false)
-  hasUniversityEducation Boolean @default(false)
-  
-  universityTitle    String?  // Specific title if university education exists
-
-  professionalSummary String?
-  
-  // Competencies
-  knowledge          String[] // Conocimientos específicos
-  skills             String[] // inferred skills (habilidades adquiridas)
-  
-  yearsOfExperience  Int?
-  education          String?   // JSON string summary
-  workExperience     String?   // JSON string summary
-  languages          String[]
-  
-  aiModelUsed        String    @default("gemini-1.5-flash")
-  rawResponse        String?   // Store full raw JSON for debug
-  createdAt          DateTime  @default(now())
+  id                     Int         @id @default(autoincrement())
+  applicationId          Int         @unique
+  professionalSummary    String?
+  skills                 String[]
+  yearsOfExperience      Int?
+  education              String?
+  workExperience         String?
+  languages              String[]
+  aiModelUsed            String      @default("gemini-1.5-flash")
+  rawResponse            String?
+  createdAt              DateTime    @default(now())
+  dni                    String?
+  email                  String?
+  fullName               String?
+  hasPrimaryEducation    Boolean     @default(false)
+  hasSecondaryEducation  Boolean     @default(false)
+  hasTertiaryEducation   Boolean     @default(false)
+  hasUniversityEducation Boolean     @default(false)
+  knowledge              String[]
+  location               String?
+  maritalStatus          String?
+  phone                  String?
+  universityTitle        String?
+  application            Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 }
 
 model Advertisement {
@@ -160,13 +147,13 @@ model Advertisement {
   description     String?
   imageUrl        String?
   linkUrl         String?
-  level           Int       // 1=Premium ($4k/día), 2=Destacado ($3k/día), 3=Estándar ($2k/día)
-  position        String    // "hero", "middle", "sidebar"
+  level           Int
+  position        String
   isActive        Boolean   @default(true)
   startDate       DateTime?
   endDate         DateTime?
   daysContracted  Int       @default(7)
-  pricePerDay     Float     // 2000, 3000, or 4000
+  pricePerDay     Float
   totalPrice      Float?
   clicks          Int       @default(0)
   impressions     Int       @default(0)
