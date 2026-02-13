@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
             response.cookies.set('auth_token', 'admin_session', {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
+                secure: false, // Desactivado para permitir login vía HTTP (IP/Puerto)
                 sameSite: 'strict',
                 maxAge: 60 * 60 * 24, // 24 hours
                 path: '/',
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
             response.cookies.set('user_role', 'admin', {
                 httpOnly: false,
-                secure: process.env.NODE_ENV === 'production',
+                secure: false,
                 sameSite: 'strict',
                 maxAge: 60 * 60 * 24,
                 path: '/',
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
 
                     response.cookies.set('auth_token', `company_${user.id}`, {
                         httpOnly: true,
-                        secure: process.env.NODE_ENV === 'production',
+                        secure: false,
                         sameSite: 'strict',
                         maxAge: 60 * 60 * 24 * 7, // 7 days
                         path: '/',
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
 
                     response.cookies.set('user_role', 'company', {
                         httpOnly: false,
-                        secure: process.env.NODE_ENV === 'production',
+                        secure: false,
                         sameSite: 'strict',
                         maxAge: 60 * 60 * 24 * 7,
                         path: '/',
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
 
                     response.cookies.set('user_id', String(user.id), {
                         httpOnly: false,
-                        secure: process.env.NODE_ENV === 'production',
+                        secure: false,
                         sameSite: 'strict',
                         maxAge: 60 * 60 * 24 * 7,
                         path: '/',
