@@ -1,6 +1,9 @@
 import Image from "next/image";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
+
+export const dynamic = "force-dynamic";
+
 import PremiumBanner from "@/components/ads/PremiumBanner";
 import FeaturedAd from "@/components/ads/FeaturedAd";
 import SidebarAds from "@/components/ads/SidebarAds";
