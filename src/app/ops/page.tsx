@@ -3,6 +3,8 @@ import Link from "next/link";
 
 import prisma from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboard() {
     const totalEmpleos = await prisma.jobPosting.count();
     const empleosActivos = await prisma.jobPosting.count({
