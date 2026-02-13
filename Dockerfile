@@ -1,12 +1,15 @@
 FROM node:20-alpine AS base
 RUN apk add --no-cache libc6-compat openssl
 
-# Install dependencies only when needed
-FROM base AS deps
+# Install dependencies and build the application
+FROM base AS builder
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
+# Copy dependency files
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+COPY prisma ./prisma/
+
+# Install dependencies based on the preferred package manager
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
@@ -14,22 +17,21 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+# Copy the rest of the application code
 COPY . .
+
+# Generate Prisma Client
+RUN npx prisma generate
 
 # Disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN npx prisma generate
-
+# Build the application
 RUN \
-  if [ -f yarn.lock ]; then yarn run build; \
+  if [ -f yarn.lock ]; then yarn build; \
   elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
-  else echo "Lockfile not found." && exit 1; \
+  elif [ -f pnpm-lock.yaml ]; then pnpm build; \
+  else npm run build; \
   fi
 
 # Production image, copy all the files and run next
@@ -42,11 +44,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# Copy essential files for production
 COPY --from=builder /app/public ./public
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-# We need to configure next.config.js with output: 'standalone'
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
