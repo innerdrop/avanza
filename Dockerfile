@@ -46,6 +46,7 @@ RUN adduser --system --uid 1001 nextjs
 
 # Copy essential files for production
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
